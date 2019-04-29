@@ -46,11 +46,29 @@ Is a Monad that contains Either a Value if the oparation was successful or an Er
 
 ## Usage ##
 
-* All Results have the Methods Do, OnSuccess, OnError, Either, Match, Keep, Ensure.
+* All Results have the Methods Do, OnSuccess, OnError, Either, Match, Bind, BindError, Keep, Ensure.
 * If a Result has a Value and OnSuccess, Either, Match, Keep or Ensure is called the path that handles the Success requires the usage of the value. The same goes for the Error.
 * All Methods throw an ArgumentNullException if a parameter of Action or Func is null.
 * Exceptions are not handled by the Results.
-* OnSuccess and OnError can convert down to types of Results without Error or Value as long as the Value or Error of the Result was handled.
+
+### Bind ###
+If the Result is a Success it turns into the outcome of the Func, otherwise it returns as Error of the new type.
+The method can be overloaded to also specify wich Result it should be turned into in case of an Error.
+
+ ```csharp
+    Result.Success()
+    .Bind(() => Result<int>.Success(200))
+    .Bind(value => Result<string, string>.Success("OK"), () => Result<string, string>.Error("Error"))
+    .BindOnError(error => Result<string>.Error()); // Works because if an Error occurs it is handled here
+```
+
+### BindOnError ###
+If the Result is a Error it turns into the outcome of the Func, otherwise it returns as Success of the new type.
+
+ ```csharp
+    Result.Success()
+    .BindOnError(() => ResultWithError<int>.Error(500));
+```
 
 ### Do ###
 Calls the Action in either case
@@ -61,6 +79,7 @@ Calls the Action in either case
 
 ### OnSuccess ###
 Calls the Action or Func if the Result is a Success.
+It transforms the Value of the Result if a Func is given and turns the Result into a type that can hold the Value if needed.
 
  ```csharp
     Result.Success()
@@ -71,6 +90,7 @@ Calls the Action or Func if the Result is a Success.
 
 ### OnError ###
 Calls the Action or Func if the Result is a Error.
+It transforms the Error of the Result if a Func is given and turns the Result into a type that can hold the Error if needed.
 
  ```csharp
     Result.Error()
@@ -95,18 +115,15 @@ Calls the left Func if the Result is a success, otherwise calls the right one.
 
  ```csharp
     Result.Success()
-    .Match(() => Result<string, int>.Success("OK"), () => Result<string, int>.Error(404))
-    .Match(value => value, error => error.ToString()); // string
+    .Match(() => 100, () => 404); // int
 ```
 
 ### Ensure ###
-Ensures that the condition is true.
+Turns the Result into a failture if it was a Success and the condition is false.
 
  ```csharp
-    Result.Success()
-    .Ensure(() => DateTime.Now > new DateTime(2020, 1, 1))
-    .Either(() => DateTime.Now, () => "Too early.")   //Result<DateTime, string>
-    .Ensure(value => value < new DateTime(2021, 1, 1), () => "Too late.");
+    Result<DateTime>.Success(DateTime.Now)
+    .Ensure(date => date > new DateTime(2020, 1, 1) && date < new DateTime(2021, 1, 1));
 ```
 
 ### Keep ###
