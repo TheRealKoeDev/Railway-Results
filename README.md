@@ -58,8 +58,7 @@ The method can be overloaded to also specify wich Result it should be turned int
  ```csharp
     Result.Success()
     .Bind(() => Result<int>.Success(200))
-    .Bind(value => Result<string, string>.Success("OK"), () => Result<string, string>.Error("Error"))
-    .BindOnError(error => Result<string>.Error()); // Works because if an Error occurs it is handled here
+    .Bind(value => Result<string, string>.Success("OK"), () => Result<string, string>.Error("Error"));
 ```
 
 ### BindOnError ###
@@ -67,7 +66,8 @@ If the Result is a Error it turns into the outcome of the Func, otherwise it ret
 
  ```csharp
     Result.Success()
-    .BindOnError(() => ResultWithError<int>.Error(500));
+    .BindOnError(() => ResultWithError<int>.Error(500))
+    .BindOnError(error => Result.Error());
 ```
 
 ### Do ###
