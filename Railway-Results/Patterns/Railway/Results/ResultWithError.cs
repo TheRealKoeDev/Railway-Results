@@ -39,6 +39,37 @@ namespace KoeLib.Patterns.Railway.Results
 
         public Result AsPlainResult() => this;
 
+        public ResultWithError<TError> Bind(Func<ResultWithError<TError>> onSuccess)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
+            return !_isError ? onSuccess() : this;
+        }
+
+        public Result<TValue, TError> Bind<TValue>(Func<Result<TValue, TError>> onSuccess)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
+            return !_isError ? onSuccess() : _error;
+        }
+
+        public TResult Bind<TResult>(Func<TResult> onSuccess, Func<TError, TResult> onError)
+            where TResult : IResult
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
+            return !_isError ? onSuccess() : onError(_error);
+        }
+
+        public ResultWithError<TNewError> BindOnError<TNewError>(Func<TError, ResultWithError<TNewError>> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            return !_isError ? new ResultWithError<TNewError>() : onError(_error);
+        }
+
+        public Result BindOnError(Func<TError, Result> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            return !_isError ? Result.Success() : onError(_error);
+        }
+
         public ResultWithError<TError> Ensure(Func<bool> condition, Func<TError> error)
         {
             Args.ExceptionIfNull(condition, nameof(condition), error, nameof(error));
@@ -98,17 +129,7 @@ namespace KoeLib.Patterns.Railway.Results
             return !_isError ? onSuccess() : Result<TValue, TError>.Error(_error);
         }
 
-        public ResultWithError<TError> OnSuccess(Func<ResultWithError<TError>> onSuccess)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
-            return !_isError ? onSuccess() : this;
-        }
-
-        public Result<TValue, TError> OnSuccess<TValue>(Func<Result<TValue, TError>> onSuccess)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
-            return !_isError ? onSuccess() : _error;
-        }
+        
 
           public ResultWithError<TError> OnError(Action<TError> onError)
         {
@@ -120,23 +141,11 @@ namespace KoeLib.Patterns.Railway.Results
             return this;
         }
 
-         public ResultWithError<TNewError> OnError<TNewError>(Func<TError, TNewError> onError)
+        public ResultWithError<TNewError> OnError<TNewError>(Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
             return !_isError ? new ResultWithError<TNewError>() : onError(_error);
-        }
-
-       public ResultWithError<TNewError> OnError<TNewError>(Func<TError, ResultWithError<TNewError>> onError)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            return !_isError ? new ResultWithError<TNewError>() : onError(_error);
-        }
-
-       public Result OnError(Func<TError, Result> onError)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            return !_isError ? Result.Success() : onError(_error);
-        }
+        }       
 
         public ResultWithError<TError> Either(Action onSuccess, Action<TError> onError)
         {
@@ -180,7 +189,7 @@ namespace KoeLib.Patterns.Railway.Results
             return !_isError ? Result<TValue, TNewError>.Success(onSuccess()) : onError(_error);
         }
 
-       public T Match<T>(Func<T> onSuccess, Func<TError, T> onError)
+        public T Match<T>(Func<T> onSuccess, Func<TError, T> onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));           
             return !_isError ? onSuccess() : onError(_error);

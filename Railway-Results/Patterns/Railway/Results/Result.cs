@@ -46,6 +46,37 @@ namespace KoeLib.Patterns.Railway.Results
         public static implicit operator Result(bool success)
             => new Result(success);
 
+        public Result Bind(Func<Result> onSuccess)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
+            return _isSuccess ? onSuccess() : this;
+        }
+
+        public Result<TValue> Bind<TValue>(Func<Result<TValue>> onSuccess)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
+            return _isSuccess ? onSuccess() : Result<TValue>.Error();
+        }
+
+        public TResult Bind<TResult>(Func<TResult> onSuccess, Func<TResult> onError)
+           where TResult : IResult
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
+            return _isSuccess ? onSuccess() : onError();
+        }
+
+        public Result BindOnError(Func<Result> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            return _isSuccess ? this : onError();
+        }
+
+        public ResultWithError<TError> BindOnError<TError>(Func<ResultWithError<TError>> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            return _isSuccess ? ResultWithError<TError>.Success() : onError();
+        }
+       
         public Result Ensure(Func<bool> condition)
         {
             Args.ExceptionIfNull(condition, nameof(condition));
@@ -95,19 +126,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess() : Result<TValue>.Error();
-        }
-
-        public Result<TValue> OnSuccess<TValue>(Func<Result<TValue>> onSuccess)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
-            return _isSuccess ? onSuccess() : Result<TValue>.Error();
-        }
-
-        public Result OnSuccess(Func<Result> onSuccess)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
-            return _isSuccess ? onSuccess() : this;
-        }
+        }        
 
         public Result OnError(Action onError)
         {
@@ -124,19 +143,7 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? ResultWithError<TError>.Success() : onError();
         }
-
-        public ResultWithError<TError> OnError<TError>(Func<ResultWithError<TError>> onError)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? ResultWithError<TError>.Success() : onError();
-        }
-
-        public Result OnError(Func<Result> onError)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? this : onError();
-        }
-
+        
         public Result Either(Action onSuccess, Action onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
@@ -178,6 +185,7 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
             return _isSuccess ? Result<TValue, TError>.Success(onSuccess()) : Result<TValue, TError>.Error(onError());
         }
+
 
         /// <summary>
         /// Matches the specified on success.

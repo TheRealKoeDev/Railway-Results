@@ -23,16 +23,16 @@ namespace KoeLib.Patterns.Railway.Tasks
             return railsTask.ContinueWith(task => task.Result.OnSuccess(onSuccess));
         }
 
-        public static Task<ResultWithError<TError>> OnSuccess<TError>(this Task<ResultWithError<TError>> railsTask, Func<ResultWithError<TError>> onSuccess)
+        public static Task<ResultWithError<TError>> Bind<TError>(this Task<ResultWithError<TError>> railsTask, Func<ResultWithError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(railsTask, nameof(railsTask), onSuccess, nameof(onSuccess));
-            return railsTask.ContinueWith(task => task.Result.OnSuccess(onSuccess));
+            return railsTask.ContinueWith(task => task.Result.Bind(onSuccess));
         }
 
-        public static Task<Result<TValue, TError>> OnSuccess<TValue, TError>(this Task<ResultWithError<TError>> railsTask, Func<Result<TValue, TError>> onSuccess)
+        public static Task<Result<TValue, TError>> Bind<TValue, TError>(this Task<ResultWithError<TError>> railsTask, Func<Result<TValue, TError>> onSuccess)
         {
             Args.ExceptionIfNull(railsTask, nameof(railsTask), onSuccess, nameof(onSuccess));
-            return railsTask.ContinueWith(task => task.Result.OnSuccess(onSuccess));
+            return railsTask.ContinueWith(task => task.Result.Bind(onSuccess));
         }
 
         public static Task<ResultWithError<TError>> OnError<TError>(this Task<ResultWithError<TError>> railsTask, Action<TError> onError)
@@ -47,16 +47,16 @@ namespace KoeLib.Patterns.Railway.Tasks
             return railsTask.ContinueWith(task => task.Result.OnError(onError));
         }
 
-        public static Task<ResultWithError<TNewError>> OnError<TError, TNewError>(this Task<ResultWithError<TError>> railsTask, Func<TError, ResultWithError<TNewError>> onError)
+        public static Task<ResultWithError<TNewError>> BindOnError<TError, TNewError>(this Task<ResultWithError<TError>> railsTask, Func<TError, ResultWithError<TNewError>> onError)
         {
             Args.ExceptionIfNull(railsTask, nameof(railsTask), onError, nameof(onError));
-            return railsTask.ContinueWith(task => task.Result.OnError(onError));
+            return railsTask.ContinueWith(task => task.Result.BindOnError(onError));
         }
 
-        public static Task<Result> OnError<TError>(this Task<ResultWithError<TError>> railsTask, Func<TError, Result> onError)
+        public static Task<Result> BindOnError<TError>(this Task<ResultWithError<TError>> railsTask, Func<TError, Result> onError)
         {
             Args.ExceptionIfNull(railsTask, nameof(railsTask), onError, nameof(onError));
-            return railsTask.ContinueWith(task => task.Result.OnError(onError));
+            return railsTask.ContinueWith(task => task.Result.BindOnError(onError));
         }
         public static Task<ResultWithError<TError>> Either<TError>(this Task<ResultWithError<TError>> railsTask, Action onSuccess, Action<TError> onError)
         {

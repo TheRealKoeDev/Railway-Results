@@ -28,21 +28,21 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TNewValue, TError>> OnSuccess<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, Result<TNewValue, TError>> onSuccess)
+        public static IEnumerable<Result<TNewValue, TError>> Bind<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, Result<TNewValue, TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                yield return result.Bind(onSuccess);
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> OnSuccess<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, ResultWithError<TError>> onSuccess)
+        public static IEnumerable<ResultWithError<TError>> Bind<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, ResultWithError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                yield return result.Bind(onSuccess);
             }
         }
 
@@ -63,20 +63,20 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue>> OnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue>> onError)
+        public static IEnumerable<Result<TValue>> BindOnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnError(onError);
+                yield return result.BindOnError(onError);
             }
         }
-        public static IEnumerable<Result<TValue, TNewError>> OnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue, TNewError>> onError)
+        public static IEnumerable<Result<TValue, TNewError>> BindOnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue, TNewError>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnError(onError);
+                yield return result.BindOnError(onError);
             }
         }
 
