@@ -10,21 +10,27 @@ namespace KoeLib.Patterns.Railway.Linq
     [DebuggerStepThrough]
     public static class IEnumerableOfResultOfValueErrorExtension
     {
-        public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess)
+        public static IEnumerable<Result<TValue, TError>> Successes<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
         {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), target, nameof(target));
+            Args.ExceptionIfNull(target, nameof(target));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                if (result.Match(value => true, error => false))
+                {
+                    yield return result;
+                }
             }
         }
 
-        public static IEnumerable<Result<TNewValue, TError>> OnSuccess<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, TNewValue> onSuccess)
+        public static IEnumerable<Result<TValue, TError>> Errors<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
         {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            Args.ExceptionIfNull(target, nameof(target));
             foreach (Result<TValue, TError> result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                if (result.Match(value => false, error => true))
+                {
+                    yield return result;
+                }
             }
         }
 
@@ -46,23 +52,6 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue, TError>> OnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TError> onError)
-        {
-            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (Result<TValue, TError> result in target)
-            {
-                yield return result.OnError(onError);
-            }
-        }
-        public static IEnumerable<Result<TValue, TNewError>> OnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, TNewError> onError)
-        {
-            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (Result<TValue, TError> result in target)
-            {
-                yield return result.OnError(onError);
-            }
-        }
-
         public static IEnumerable<Result<TValue>> BindOnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
@@ -79,6 +68,42 @@ namespace KoeLib.Patterns.Railway.Linq
                 yield return result.BindOnError(onError);
             }
         }
+
+        
+        public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), target, nameof(target));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.OnSuccess(onSuccess);
+            }
+        }
+
+        public static IEnumerable<Result<TNewValue, TError>> OnSuccess<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, TNewValue> onSuccess)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.OnSuccess(onSuccess);
+            }
+        }
+
+        public static IEnumerable<Result<TValue, TError>> OnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TError> onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.OnError(onError);
+            }
+        }
+        public static IEnumerable<Result<TValue, TNewError>> OnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, TNewError> onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.OnError(onError);
+            }
+        }        
 
         public static IEnumerable<Result<TValue>> Either<TValue>(this IEnumerable<Result<TValue>> target, Action<TValue> onSuccess, Action onError)
         {
@@ -112,6 +137,15 @@ namespace KoeLib.Patterns.Railway.Linq
             foreach (Result<TValue> result in target)
             {
                 yield return result.Either(onSuccess, onError);
+            }
+        }
+
+        public static IEnumerable<Result<TValue, TError>> Ensure<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, bool> condition, Func<TError> errorFunc)
+        {
+            Args.ExceptionIfNull(target, nameof(target), condition, nameof(condition), errorFunc, nameof(errorFunc));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.Ensure(condition, errorFunc);
             }
         }
 

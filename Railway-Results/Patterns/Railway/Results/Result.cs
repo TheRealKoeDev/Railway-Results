@@ -36,13 +36,6 @@ namespace KoeLib.Patterns.Railway.Results
             return new Result(true);
         }
 
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Boolean"/> to <see cref="Result"/>.
-        /// </summary>
-        /// <param name="success">if set to <c>true</c> [success].</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
         public static implicit operator Result(bool success)
             => new Result(success);
 
@@ -76,41 +69,6 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? ResultWithError<TError>.Success() : onError();
         }
-       
-        public Result Ensure(Func<bool> condition)
-        {
-            Args.ExceptionIfNull(condition, nameof(condition));
-            return _isSuccess && condition();
-        }
-
-        public Result KeepOnSuccess<T>(Func<T> onSuccess, out T kept)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
-            kept = _isSuccess ? onSuccess() : default;
-            return this;
-        }
-
-        public Result KeepOnError<T>(Func<T> onError, out T kept)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            kept = _isSuccess ? default : onError();
-            return this;
-        }
-
-        public Result KeepEither<T>(Func<T> onSuccess, Func<T> onError, out T keptValue)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
-            keptValue = _isSuccess ? onSuccess() : onError();
-            return this;
-        }
-
-        public Result KeepEither<T1, T2>(Func<T1> onSuccess, Func<T2> onError, out T1 keptOnSuccess, out T2 keptOnError)
-        {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
-            keptOnSuccess = _isSuccess ? onSuccess() : default;
-            keptOnError = _isSuccess ? default : onError();
-            return this;
-        }
 
         public Result OnSuccess(Action onSuccess)
         {
@@ -126,7 +84,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess() : Result<TValue>.Error();
-        }        
+        }
 
         public Result OnError(Action onError)
         {
@@ -143,7 +101,7 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? ResultWithError<TError>.Success() : onError();
         }
-        
+
         public Result Either(Action onSuccess, Action onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
@@ -186,18 +144,45 @@ namespace KoeLib.Patterns.Railway.Results
             return _isSuccess ? Result<TValue, TError>.Success(onSuccess()) : Result<TValue, TError>.Error(onError());
         }
 
-
-        /// <summary>
-        /// Matches the specified on success.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="onSuccess">The on success.</param>
-        /// <param name="onError">The on error.</param>
-        /// <returns></returns>
         public T Match<T>(Func<T> onSuccess, Func<T> onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
             return _isSuccess ? onSuccess() : onError();
+        }
+
+        public Result Ensure(Func<bool> condition)
+        {
+            Args.ExceptionIfNull(condition, nameof(condition));
+            return _isSuccess && condition();
+        }
+
+        public Result KeepOnSuccess<T>(Func<T> onSuccess, out T kept)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
+            kept = _isSuccess ? onSuccess() : default;
+            return this;
+        }
+
+        public Result KeepOnError<T>(Func<T> onError, out T kept)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            kept = _isSuccess ? default : onError();
+            return this;
+        }
+
+        public Result KeepEither<T>(Func<T> onSuccess, Func<T> onError, out T keptValue)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
+            keptValue = _isSuccess ? onSuccess() : onError();
+            return this;
+        }
+
+        public Result KeepEither<T1, T2>(Func<T1> onSuccess, Func<T2> onError, out T1 keptOnSuccess, out T2 keptOnError)
+        {
+            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
+            keptOnSuccess = _isSuccess ? onSuccess() : default;
+            keptOnError = _isSuccess ? default : onError();
+            return this;
         }
     }
 }

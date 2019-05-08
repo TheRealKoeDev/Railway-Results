@@ -176,9 +176,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
             return _isSuccess ? Result<TNewValue, TNewError>.Success(onSuccess(_value)) : onError();
-        }
-
-        
+        }        
 
         public T Match<T>(Func<TValue, T> onSuccess, Func<T> onError)
         {

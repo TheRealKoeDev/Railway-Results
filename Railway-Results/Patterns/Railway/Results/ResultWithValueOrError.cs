@@ -8,7 +8,7 @@ namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
     /// <para>Is a Monad with Value and Error.</para>
-    /// The DefaultValue of this struct has no Value and the defaultvalue of <typeparamref name="TError"/>, it represents a failed Result.
+    /// The DefaultValue of this struct is a failed Result with the defaultvalue of <typeparamref name="TError"/>.
     /// </summary>
     /// <typeparam name="TValue">The type of the Value.</typeparam>
     /// <typeparam name="TError">The type of the Error.</typeparam>
@@ -45,6 +45,9 @@ namespace KoeLib.Patterns.Railway.Results
         public static implicit operator Result<TValue, TError>(TValue value)
             => new Result<TValue, TError>(value);
 
+        public static implicit operator Result<TValue, TError>(TError error)
+            => new Result<TValue, TError>(error);
+
         public static implicit operator Result(Result<TValue, TError> result)
             => result._isSuccess;
 
@@ -52,10 +55,7 @@ namespace KoeLib.Patterns.Railway.Results
             => result._isSuccess ? result._value : Result<TValue>.Error();
 
         public static implicit operator ResultWithError<TError>(Result<TValue, TError> result)
-            => result._isSuccess ? ResultWithError<TError>.Success() : result._error;
-
-        public static implicit operator Result<TValue, TError>(TError error)
-            => new Result<TValue, TError>(error);
+            => result._isSuccess ? ResultWithError<TError>.Success() : result._error;       
 
         public Result AsPlainResult() => this;
         public Result<TValue> AsResultWithValue() => this;

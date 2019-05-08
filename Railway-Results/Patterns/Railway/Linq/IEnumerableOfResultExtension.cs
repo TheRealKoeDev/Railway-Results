@@ -10,21 +10,27 @@ namespace KoeLib.Patterns.Railway.Linq
     [DebuggerStepThrough]
     public static class IEnumerableOfResultExtension
     {
-        public static IEnumerable<Result> OnSuccess(this IEnumerable<Result> target, Action onSuccess)
-        {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+        public static IEnumerable<Result> Successes(this IEnumerable<Result> target)
+        {            
+            Args.ExceptionIfNull(target, nameof(target));
             foreach (Result result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                if (result.Match(() => true, () => false))
+                {
+                    yield return result;
+                }
             }
         }
 
-        public static IEnumerable<Result<TValue>> OnSuccess<TValue>(this IEnumerable<Result> target, Func<TValue> onSuccess)
+        public static IEnumerable<Result> Errors(this IEnumerable<Result> target)
         {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            Args.ExceptionIfNull(target, nameof(target));
             foreach (Result result in target)
             {
-                yield return result.OnSuccess(onSuccess);
+                if (result.Match(() => false, () => true))
+                {
+                    yield return result;
+                }
             }
         }
 
@@ -46,21 +52,21 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result> OnError(this IEnumerable<Result> target, Action onError)
+        public static IEnumerable<Result> OnSuccess(this IEnumerable<Result> target, Action onSuccess)
         {
-            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result result in target)
             {
-                yield return result.OnError(onError);
+                yield return result.OnSuccess(onSuccess);
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> OnError<TError>(this IEnumerable<Result> target, Func<TError> onError)
+        public static IEnumerable<Result<TValue>> OnSuccess<TValue>(this IEnumerable<Result> target, Func<TValue> onSuccess)
         {
-            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result result in target)
             {
-                yield return result.OnError(onError);
+                yield return result.OnSuccess(onSuccess);
             }
         }
 
@@ -79,6 +85,24 @@ namespace KoeLib.Patterns.Railway.Linq
             foreach (Result result in target)
             {
                 yield return result.BindOnError(onError);
+            }
+        }
+
+        public static IEnumerable<Result> OnError(this IEnumerable<Result> target, Action onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            foreach (Result result in target)
+            {
+                yield return result.OnError(onError);
+            }
+        }
+
+        public static IEnumerable<ResultWithError<TError>> OnError<TError>(this IEnumerable<Result> target, Func<TError> onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            foreach (Result result in target)
+            {
+                yield return result.OnError(onError);
             }
         }
 
@@ -115,6 +139,15 @@ namespace KoeLib.Patterns.Railway.Linq
             foreach (Result result in target)
             {
                 yield return result.Either(onSuccess, onError);
+            }
+        }
+
+        public static IEnumerable<Result> Ensure(this IEnumerable<Result> target, Func<bool> condition)
+        {
+            Args.ExceptionIfNull(target, nameof(target), condition, nameof(condition));
+            foreach (Result result in target)
+            {
+                yield return result.Ensure(condition);
             }
         }
 

@@ -8,6 +8,30 @@ namespace KoeLib.Patterns.Railway.Linq
 {
     public static class IEnumerableOfErrorResultOfTErrorExtension
     {
+        public static IEnumerable<ResultWithError<TError>> Successes<TError>(this IEnumerable<ResultWithError<TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (ResultWithError<TError> result in target)
+            {
+                if (result.Match(() => true, error => false))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<ResultWithError<TError>> Errors<TError>(this IEnumerable<ResultWithError<TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (ResultWithError<TError> result in target)
+            {
+                if (result.Match(() => false, error => true))
+                {
+                    yield return result;
+                }
+            }
+        }
+
         public static IEnumerable<ResultWithError<TError>> OnSuccess<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
@@ -111,6 +135,15 @@ namespace KoeLib.Patterns.Railway.Linq
             foreach (ResultWithError<TError> result in target)
             {
                 yield return result.Either(onSuccess, onError);
+            }
+        }
+
+        public static IEnumerable<ResultWithError<TError>> Ensure<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> condition, Func<TError> errorFunc)
+        {
+            Args.ExceptionIfNull(target, nameof(target), condition, nameof(condition), errorFunc, nameof(errorFunc));
+            foreach (ResultWithError<TError> result in target)
+            {
+                yield return result.Ensure(condition, errorFunc);
             }
         }
 

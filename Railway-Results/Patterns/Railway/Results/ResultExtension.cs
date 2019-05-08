@@ -12,9 +12,11 @@ namespace KoeLib.Patterns.Railway.Results
     {
         public static Task<TResult> Async<TResult>(this TResult result)
            where TResult : IResult
-        {
-            return Task.FromResult(result);
-        }
+           => Task.FromResult(result);
+
+        public static TResult BindBoth<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> keepFunc)
+            where TResult : IResult
+            => target.Bind(keepFunc, keepFunc);
 
         public static TResult Do<TResult>(this TResult result, Action action)
            where TResult : IResult
@@ -25,10 +27,7 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         public static Result<TValueError, TValueError> Do<TValueError>(this Result<TValueError, TValueError> target, Action<TValueError> keepFunc)
-        {
-            Args.ExceptionIfNull(keepFunc, nameof(keepFunc));
-            return target.Either(keepFunc, keepFunc);
-        }
+            => target.Either(keepFunc, keepFunc);
 
         public static TResult Keep<T, TResult>(this TResult target, Func<T> keepFunc, out T kept)
             where TResult: IResult
@@ -38,19 +37,14 @@ namespace KoeLib.Patterns.Railway.Results
             return target;
         }
 
-        public static Result<TValueError, TValueError> Keep<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> keepFunc, out T kept)
+        public static Result<TValueError, TValueError> KeepEither<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> keepFunc, out T kept)
         {
-            Args.ExceptionIfNull(keepFunc, nameof(keepFunc));
             target.KeepEither(keepFunc, keepFunc, out T bothCases);
             kept = bothCases;
-
             return target;
         }
 
         public static T Match<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> keepFunc)
-        {
-            Args.ExceptionIfNull(keepFunc, nameof(keepFunc));
-            return target.Match(keepFunc, keepFunc);
-        }
+            => target.Match(keepFunc, keepFunc);
     }
 }
