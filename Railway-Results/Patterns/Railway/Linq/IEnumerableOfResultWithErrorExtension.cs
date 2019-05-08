@@ -2,10 +2,12 @@
 using KoeLib.Patterns.Railway.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace KoeLib.Patterns.Railway.Linq
 {
+    [DebuggerStepThrough]
     public static class IEnumerableOfErrorResultOfTErrorExtension
     {
         public static IEnumerable<ResultWithError<TError>> Successes<TError>(this IEnumerable<ResultWithError<TError>> target)
