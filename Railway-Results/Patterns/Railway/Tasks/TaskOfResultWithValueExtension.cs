@@ -11,6 +11,11 @@ namespace KoeLib.Patterns.Railway.Tasks
     [DebuggerStepThrough]
     public static class TaskOfResultWithValueExtension
     {
+        public static Task<Result> AsPlainResult<TValue>(this Task<Result<TValue>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            return target.ContinueWith(task => task.Result.AsPlainResult());
+        }
         public static Task<Result<TValue>> OnSuccess<TValue>(this Task<Result<TValue>> target, Action<TValue> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));

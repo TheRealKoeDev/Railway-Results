@@ -34,6 +34,27 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<ResultWithError<TError>> Filter<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> successFilter, Func<TError, bool> errorFilter)
+        {
+            Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
+            foreach (ResultWithError<TError> result in target)
+            {
+                if (result.Match(() => successFilter(), error => errorFilter(error)))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<Result> AsPlainResults<TError>(this IEnumerable<ResultWithError<TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (ResultWithError<TError> result in target)
+            {
+                yield return result;
+            }
+        }
+
         public static IEnumerable<ResultWithError<TError>> OnSuccess<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));

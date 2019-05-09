@@ -26,7 +26,10 @@ namespace KoeLib.Patterns.Railway.Results
             return result;
         }
 
-        public static Result<TValueError, TValueError> Do<TValueError>(this Result<TValueError, TValueError> target, Action<TValueError> keepFunc)
+        public static Result<TValueError, TValueError> Either<TValueError>(this Result<TValueError, TValueError> target, Action<TValueError> keepFunc)
+            => target.Either(keepFunc, keepFunc);
+
+        public static Result<TNewValueError, TNewValueError> Either<TValueError, TNewValueError>(this Result<TValueError, TValueError> target, Func<TValueError, TNewValueError> keepFunc)
             => target.Either(keepFunc, keepFunc);
 
         public static TResult Keep<T, TResult>(this TResult target, Func<T> keepFunc, out T kept)

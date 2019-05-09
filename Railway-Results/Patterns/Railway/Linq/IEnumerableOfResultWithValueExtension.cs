@@ -34,9 +34,30 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<Result<TValue>> Filter<TValue>(this IEnumerable<Result<TValue>> target, Func<TValue, bool> successFilter, Func<bool> errorFilter)
+        {
+            Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
+            foreach (Result<TValue> result in target)
+            {
+                if (result.Match(value => successFilter(value), () => errorFilter()))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<Result> AsPlainResults<TValue>(this IEnumerable<Result<TValue>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (Result<TValue> result in target)
+            {
+                yield return result;
+            }
+        }
+
         public static IEnumerable<Result<TValue>> OnSuccess<TValue>(this IEnumerable<Result<TValue>> target, Action<TValue> onSuccess)
         {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), target, nameof(target));
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result<TValue> result in target)
             {
                 yield return result.OnSuccess(onSuccess);

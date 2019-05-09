@@ -11,6 +11,23 @@ namespace KoeLib.Patterns.Railway.Tasks
     [DebuggerStepThrough]
     public static class TaskOfResultWithValueOrErrorExtension
     {
+        public static Task<Result> AsPlainResult<TValue, TError>(this Task<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            return target.ContinueWith(task => task.Result.AsPlainResult());
+        }
+
+        public static Task<Result<TValue>> AsResultWithValue<TValue, TError>(this Task<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            return target.ContinueWith(task => task.Result.AsResultWithValue());
+        }
+
+        public static Task<ResultWithError<TError>> AsResultWithError<TValue, TError>(this Task<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            return target.ContinueWith(task => task.Result.AsResultWithError());
+        }
         public static Task<Result<TValue, TError>> OnSuccess<TValue, TError>(this Task<Result<TValue, TError>> target, Action<TValue> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));

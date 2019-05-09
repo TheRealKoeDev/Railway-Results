@@ -34,6 +34,45 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<Result<TValue, TError>> Filter<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, bool> successFilter, Func<TError, bool> errorFilter)
+        {
+            Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
+            foreach (Result<TValue, TError> result in target)
+            {
+                if (result.Match(value => successFilter(value), error => errorFilter(error)))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<Result> AsPlainResults<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<Result<TValue>> AsResultsWithValue<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result;
+            }
+        }
+
+        public static IEnumerable<ResultWithError<TError>> AsResultsWithError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result;
+            }
+        }
+
         public static IEnumerable<Result<TNewValue, TError>> Bind<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, Result<TNewValue, TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
@@ -72,7 +111,7 @@ namespace KoeLib.Patterns.Railway.Linq
         
         public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess)
         {
-            Args.ExceptionIfNull(onSuccess, nameof(onSuccess), target, nameof(target));
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             foreach (Result<TValue, TError> result in target)
             {
                 yield return result.OnSuccess(onSuccess);
