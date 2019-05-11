@@ -43,30 +43,13 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue>> Bind<TValue>(this IEnumerable<Result> target, Func<Result<TValue>> onSuccess)
+        public static IEnumerable<TResult> Bind<TResult>(this IEnumerable<Result> target, Func<TResult> onSuccess, Func<TResult> onError)
+            where TResult: IResult
         {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
             foreach (Result result in target)
             {
-                yield return result.Bind(onSuccess);
-            }
-        }
-
-        public static IEnumerable<Result> OnSuccess(this IEnumerable<Result> target, Action onSuccess)
-        {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (Result result in target)
-            {
-                yield return result.OnSuccess(onSuccess);
-            }
-        }
-
-        public static IEnumerable<Result<TValue>> OnSuccess<TValue>(this IEnumerable<Result> target, Func<TValue> onSuccess)
-        {
-            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (Result result in target)
-            {
-                yield return result.OnSuccess(onSuccess);
+                yield return result.Bind(onSuccess, onError);
             }
         }
 
@@ -85,6 +68,24 @@ namespace KoeLib.Patterns.Railway.Linq
             foreach (Result result in target)
             {
                 yield return result.BindOnError(onError);
+            }
+        }
+
+        public static IEnumerable<Result> OnSuccess(this IEnumerable<Result> target, Action onSuccess)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            foreach (Result result in target)
+            {
+                yield return result.OnSuccess(onSuccess);
+            }
+        }
+
+        public static IEnumerable<Result<TValue>> OnSuccess<TValue>(this IEnumerable<Result> target, Func<TValue> onSuccess)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            foreach (Result result in target)
+            {
+                yield return result.OnSuccess(onSuccess);
             }
         }
 

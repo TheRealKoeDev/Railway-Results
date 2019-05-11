@@ -14,9 +14,9 @@ namespace KoeLib.Patterns.Railway.Results
            where TResult : IResult
            => Task.FromResult(result);
 
-        public static TResult BindBoth<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> keepFunc)
+        public static TResult BindBoth<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> func)
             where TResult : IResult
-            => target.Bind(keepFunc, keepFunc);
+            => target.Bind(func, func);
 
         public static TResult Do<TResult>(this TResult result, Action action)
            where TResult : IResult
@@ -26,11 +26,11 @@ namespace KoeLib.Patterns.Railway.Results
             return result;
         }
 
-        public static Result<TValueError, TValueError> Either<TValueError>(this Result<TValueError, TValueError> target, Action<TValueError> keepFunc)
-            => target.Either(keepFunc, keepFunc);
+        public static Result<TValueError, TValueError> Either<TValueError>(this Result<TValueError, TValueError> target, Action<TValueError> func)
+            => target.Either(func, func);
 
-        public static Result<TNewValueError, TNewValueError> Either<TValueError, TNewValueError>(this Result<TValueError, TValueError> target, Func<TValueError, TNewValueError> keepFunc)
-            => target.Either(keepFunc, keepFunc);
+        public static Result<TNewValueError, TNewValueError> Either<TValueError, TNewValueError>(this Result<TValueError, TValueError> target, Func<TValueError, TNewValueError> func)
+            => target.Either(func, func);
 
         public static TResult Keep<T, TResult>(this TResult target, Func<T> keepFunc, out T kept)
             where TResult: IResult
@@ -47,7 +47,7 @@ namespace KoeLib.Patterns.Railway.Results
             return target;
         }
 
-        public static T Match<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> keepFunc)
-            => target.Match(keepFunc, keepFunc);
+        public static T Match<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> func)
+            => target.Match(func, func);
     }
 }

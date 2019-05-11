@@ -20,6 +20,14 @@ namespace KoeLib.Patterns.Railway.Tasks
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             return target.ContinueWith(task => task.Result.Bind(onSuccess));
         }
+
+        public static Task<TResult> Bind<TResult>(this Task<Result> target, Func<TResult> onSuccess, Func<TResult> onError)
+            where TResult: IResult
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
+            return target.ContinueWith(task => task.Result.Bind(onSuccess, onError));
+        }
+
         public static Task<Result> BindOnError(this Task<Result> target, Func<Result> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));

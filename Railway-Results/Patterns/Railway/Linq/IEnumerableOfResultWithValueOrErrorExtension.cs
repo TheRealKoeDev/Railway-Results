@@ -39,7 +39,7 @@ namespace KoeLib.Patterns.Railway.Linq
             Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
             foreach (Result<TValue, TError> result in target)
             {
-                if (result.Match(value => successFilter(value), error => errorFilter(error)))
+                if (result.Match(successFilter, errorFilter))
                 {
                     yield return result;
                 }
@@ -91,6 +91,16 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<TResult> Bind<TValue, TError, TResult>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, TResult> onSuccess, Func<TError, TResult> onError)
+            where TResult : IResult
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
+            foreach (Result<TValue, TError> result in target)
+            {
+                yield return result.Bind(onSuccess, onError);
+            }
+        }
+
         public static IEnumerable<Result<TValue>> BindOnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
@@ -99,6 +109,7 @@ namespace KoeLib.Patterns.Railway.Linq
                 yield return result.BindOnError(onError);
             }
         }
+
         public static IEnumerable<Result<TValue, TNewError>> BindOnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, Result<TValue, TNewError>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
@@ -107,7 +118,6 @@ namespace KoeLib.Patterns.Railway.Linq
                 yield return result.BindOnError(onError);
             }
         }
-
         
         public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess)
         {
@@ -135,6 +145,7 @@ namespace KoeLib.Patterns.Railway.Linq
                 yield return result.OnError(onError);
             }
         }
+
         public static IEnumerable<Result<TValue, TNewError>> OnError<TValue, TError, TNewError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
@@ -161,6 +172,7 @@ namespace KoeLib.Patterns.Railway.Linq
                 yield return result.Either(onSuccess, onError);
             }
         }
+
         public static IEnumerable<Result<TValue, TNewError>> Either<TValue, TNewError>(this IEnumerable<Result<TValue>> target, Action<TValue> onSuccess, Func<TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
