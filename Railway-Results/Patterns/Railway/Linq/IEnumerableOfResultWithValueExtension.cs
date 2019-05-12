@@ -3,7 +3,6 @@ using KoeLib.Patterns.Railway.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace KoeLib.Patterns.Railway.Linq
 {
