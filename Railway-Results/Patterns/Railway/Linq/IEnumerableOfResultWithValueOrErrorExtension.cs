@@ -200,7 +200,7 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }        
 
-        public static IEnumerable<Result<TValue>> Either<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess, Action<TError> onError)
+        public static IEnumerable<Result<TValue, TError>> Either<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TValue> onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
             using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())
@@ -212,7 +212,7 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TNewValue>> Either<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, TNewValue> onSuccess, Action<TError> onError)
+        public static IEnumerable<Result<TNewValue, TError>> Either<TValue, TError, TNewValue>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, TNewValue> onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
             using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())

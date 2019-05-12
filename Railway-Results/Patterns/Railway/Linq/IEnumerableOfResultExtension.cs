@@ -52,6 +52,18 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<Result<TValue>> Bind<TValue>(this IEnumerable<Result> target, Func<Result<TValue>> onSuccess)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
+            using (IEnumerator<Result> enumerator = target.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Bind(onSuccess);
+                }
+            }
+        }
+
         public static IEnumerable<TResult> Bind<TResult>(this IEnumerable<Result> target, Func<TResult> onSuccess, Func<TResult> onError)
             where TResult: IResult
         {

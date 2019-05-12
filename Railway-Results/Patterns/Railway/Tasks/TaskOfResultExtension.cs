@@ -67,7 +67,7 @@ namespace KoeLib.Patterns.Railway.Tasks
         public static Task<Result> Either(this Task<Result> target, Action onSuccess, Action onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            return target.ContinueWith(task => task.Result.OnError(onError));
+            return target.ContinueWith(task => task.Result.Either(onSuccess, onError));
         }
 
         public static Task<Result<TValue>> Either<TValue>(this Task<Result> target, Func<TValue> onSuccess, Action onError)
