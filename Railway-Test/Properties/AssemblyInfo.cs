@@ -2,7 +2,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Railway.Test;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using ExecutionScope = Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope;
 
 [assembly: AssemblyTitle("Railway-Test")]
 [assembly: AssemblyDescription("")]

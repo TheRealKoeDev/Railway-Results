@@ -12,7 +12,7 @@ namespace Railway.Test
         /// <summary>
         /// How often each Test should be called.
         /// </summary>
-        public const int Iterations = 100000000;
+        public const int Iterations = 1000000;
 
         /// <summary>
         /// The number of Items for Tests of IEnumerables.

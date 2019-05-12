@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using KoeLib.Patterns.Railway.Tasks;
 using KoeLib.Patterns.Railway.Linq;
 using KoeLib.Patterns.Railway.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -54,7 +56,44 @@ namespace Railway.Test
             result.Ensure(() => true);
             result.Match(() => true, () => false);
         }
-                
+
+        [TestMethod]
+        public void TestTaskOfResult()
+        {
+            for (int i = 0; i < Settings.Iterations; i++)
+            {
+                TestTaskOfResult(Result.Success());
+                TestTaskOfResult(Result.Error());
+            }
+        }
+
+        private void TestTaskOfResult(Result result)
+        {
+            Task[] tasks = new Task[]
+            {
+                Task.FromResult(result).Bind(() => Result.Success()),
+                Task.FromResult(result).Bind(() => Result<int>.Success(1)),
+                Task.FromResult(result).Bind(() => Result<int>.Success(1), () => Result<int>.Error()),
+                Task.FromResult(result).BindOnError(() => Result.Error()),
+                Task.FromResult(result).BindOnError(() => ResultWithError<int>.Error(1)),
+
+                Task.FromResult(result).OnSuccess(() => { }),
+                Task.FromResult(result).OnSuccess(() => 1),
+                Task.FromResult(result).OnError(() => { }),
+                Task.FromResult(result).OnError(() => 1),
+
+                Task.FromResult(result).Either(() => { }, () => { }),
+                Task.FromResult(result).Either(() => 1, () => { }),
+                Task.FromResult(result).Either(() => { }, () => 1),
+                Task.FromResult(result).Either(() => 1, () => 1),
+
+                Task.FromResult(result).Ensure(() => true),
+                Task.FromResult(result).Match(() => true, () => false),
+            };
+
+            Task.WaitAll(tasks);
+        }
+
         [TestMethod]
         public void TestIEnumerableOfResult()
         {

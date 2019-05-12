@@ -13,11 +13,14 @@ namespace KoeLib.Patterns.Railway.Linq
         public static IEnumerable<ResultWithError<TError>> Successes<TError>(this IEnumerable<ResultWithError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                if (result.Match(() => true, error => false))
+                while (enumerator.MoveNext())
                 {
-                    yield return result;
+                    if (enumerator.Current.Match(() => true, error => false))
+                    {
+                        yield return enumerator.Current;
+                    }
                 }
             }
         }
@@ -25,11 +28,14 @@ namespace KoeLib.Patterns.Railway.Linq
         public static IEnumerable<ResultWithError<TError>> Errors<TError>(this IEnumerable<ResultWithError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                if (result.Match(() => false, error => true))
+                while (enumerator.MoveNext())
                 {
-                    yield return result;
+                    if (enumerator.Current.Match(() => false, error => true))
+                    {
+                        yield return enumerator.Current;
+                    }
                 }
             }
         }
@@ -37,11 +43,14 @@ namespace KoeLib.Patterns.Railway.Linq
         public static IEnumerable<ResultWithError<TError>> Filter<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> successFilter, Func<TError, bool> errorFilter)
         {
             Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                if (result.Match(successFilter, errorFilter))
+                while (enumerator.MoveNext())
                 {
-                    yield return result;
+                    if (enumerator.Current.Match(successFilter, errorFilter))
+                    {
+                        yield return enumerator.Current;
+                    }
                 }
             }
         }
@@ -49,27 +58,36 @@ namespace KoeLib.Patterns.Railway.Linq
         public static IEnumerable<Result> AsPlainResults<TError>(this IEnumerable<ResultWithError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result;
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current;
+                }
             }
         }        
 
         public static IEnumerable<ResultWithError<TError>> Bind<TError>(this IEnumerable<ResultWithError<TError>> target, Func<ResultWithError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Bind(onSuccess);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Bind(onSuccess);
+                }
             }
         }
 
         public static IEnumerable<Result<TValue, TError>> Bind<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<Result<TValue, TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Bind(onSuccess);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Bind(onSuccess);
+                }
             }
         }
 
@@ -77,117 +95,156 @@ namespace KoeLib.Patterns.Railway.Linq
             where TResult : IResult
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Bind(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Bind(onSuccess, onError);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TNewError>> BindOnError<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, ResultWithError<TNewError>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.BindOnError(onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.BindOnError(onError);
+                }
             }
         }
 
         public static IEnumerable<Result> BindOnError<TError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, Result> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.BindOnError(onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.BindOnError(onError);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TError>> OnSuccess<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.OnSuccess(onSuccess);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.OnSuccess(onSuccess);
+                }
             }
         }
 
         public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.OnSuccess(onSuccess);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.OnSuccess(onSuccess);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TError>> OnError<TError>(this IEnumerable<ResultWithError<TError>> target, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.OnError(onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.OnError(onError);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TNewError>> OnError<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.OnError(onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.OnError(onError);
+                }
             }
         }
         
         public static IEnumerable<ResultWithError<TError>> Either<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Either(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Either(onSuccess, onError);
+                }
             }
         }
 
         public static IEnumerable<Result<TValue, TError>> Either<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Either(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Either(onSuccess, onError);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TNewError>> Either<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Either(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Either(onSuccess, onError);
+                }
             }
         }
 
         public static IEnumerable<Result<TValue, TNewError>> Either<TValue, TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Either(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Either(onSuccess, onError);
+                }
             }
         }
 
         public static IEnumerable<ResultWithError<TError>> Ensure<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> condition, Func<TError> errorFunc)
         {
             Args.ExceptionIfNull(target, nameof(target), condition, nameof(condition), errorFunc, nameof(errorFunc));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Ensure(condition, errorFunc);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Ensure(condition, errorFunc);
+                }
             }
         }
 
         public static IEnumerable<T> Match<T, TError>(this IEnumerable<ResultWithError<TError>> target, Func<T> onSuccess, Func<TError, T> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            foreach (ResultWithError<TError> result in target)
+            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
             {
-                yield return result.Match(onSuccess, onError);
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.Match(onSuccess, onError);
+                }
             }
         }
     }

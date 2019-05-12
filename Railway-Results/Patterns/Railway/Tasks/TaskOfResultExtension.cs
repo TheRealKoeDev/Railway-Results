@@ -49,7 +49,7 @@ namespace KoeLib.Patterns.Railway.Tasks
         public static Task<Result<TValue>> OnSuccess<TValue>(this Task<Result> target, Func<TValue> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            return target.ContinueWith((Task<Result> task) => task.Result.OnSuccess(onSuccess));
+            return target.ContinueWith(task => task.Result.OnSuccess(onSuccess));
         }
 
         public static Task<Result> OnError(this Task<Result> target, Action onError)
@@ -73,7 +73,7 @@ namespace KoeLib.Patterns.Railway.Tasks
         public static Task<Result<TValue>> Either<TValue>(this Task<Result> target, Func<TValue> onSuccess, Action onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            return target.ContinueWith(((Task<Result> task) => task.Result.Either(onSuccess, onError)));
+            return target.ContinueWith(task => task.Result.Either(onSuccess, onError));
         }
 
         public static Task<ResultWithError<TError>> Either<TError>(this Task<Result> target, Action onSuccess, Func<TError> onError)
@@ -85,7 +85,7 @@ namespace KoeLib.Patterns.Railway.Tasks
         public static Task<Result<TValue, TError>> Either<TValue, TError>(this Task<Result> target, Func<TValue> onSuccess, Func<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            return target.ContinueWith(((Task<Result> task) => task.Result.Either(onSuccess, onError)));
+            return target.ContinueWith(task=> task.Result.Either(onSuccess, onError));
         }
 
         public static Task<Result> Ensure(this Task<Result> target, Func<bool> condition)
