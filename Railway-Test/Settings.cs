@@ -22,11 +22,16 @@ namespace Railway.Test
         /// <summary>
         /// The number of instances for parallelization.
         /// </summary>
-        public const int WorkerCount = 4;
+        public const int WorkerCount = 1;
 
         /// <summary>
         /// How the Tests should be parallelized.
         /// </summary>
-        public const ExecutionScope Scope = ExecutionScope.MethodLevel;
+        public const ExecutionScope Scope = ExecutionScope.ClassLevel;
+
+        /// <summary>
+        /// Number of chars used for the string in LargeContentTest
+        /// </summary>
+        public const int LargeContentSize = 10000;
     }
 }

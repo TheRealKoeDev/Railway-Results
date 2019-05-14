@@ -6,12 +6,14 @@ using KoeLib.Patterns.Railway.Linq;
 using KoeLib.Patterns.Railway.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Railway.Test
+namespace Railway.Test.Performance
 {
     [TestClass]
+    [DoNotParallelize]
     [TestCategory("Performance")]
     public class ResultPerformanceTest
     {
+        private readonly string LargeContent = new string('*', Settings.LargeContentSize);
         private readonly Result[] Successes = new Result[Settings.ItemCount];
         private readonly Result[] Errors = new Result[Settings.ItemCount];
 
@@ -26,20 +28,20 @@ namespace Railway.Test
         }
 
         [TestMethod]        
-        public void TestResult()
+        public void TestSingleResult()
         {            
             for (int i = 0; i < Settings.Iterations; i++)
             {
-                TestResult(Result.Success());
-                TestResult(Result.Error());
+                TestSingleResult(Result.Success());
+                TestSingleResult(Result.Error());
             }
         }
 
-        private void TestResult(Result result)
+        private void TestSingleResult(Result result)
         {
             result.Bind(() => Result.Success());
             result.Bind(() => Result<int>.Success(1));
-            result.Bind(() => Result<int>.Success(1), () => Result<int>.Error());
+            result.Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500));
             result.BindOnError(() => Result.Error());
             result.BindOnError(() => ResultWithError<int>.Error(1));
 
@@ -71,24 +73,24 @@ namespace Railway.Test
         {
             Task[] tasks = new Task[]
             {
-                Task.FromResult(result).Bind(() => Result.Success()),
-                Task.FromResult(result).Bind(() => Result<int>.Success(1)),
-                Task.FromResult(result).Bind(() => Result<int>.Success(1), () => Result<int>.Error()),
-                Task.FromResult(result).BindOnError(() => Result.Error()),
-                Task.FromResult(result).BindOnError(() => ResultWithError<int>.Error(1)),
+                result.Async().Bind(() => Result.Success()),
+                result.Async().Bind(() => Result<int>.Success(1)),
+                result.Async().Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500)),
+                result.Async().BindOnError(() => Result.Error()),
+                result.Async().BindOnError(() => ResultWithError<int>.Error(1)),
 
-                Task.FromResult(result).OnSuccess(() => { }),
-                Task.FromResult(result).OnSuccess(() => 1),
-                Task.FromResult(result).OnError(() => { }),
-                Task.FromResult(result).OnError(() => 1),
+                result.Async().OnSuccess(() => { }),
+                result.Async().OnSuccess(() => 1),
+                result.Async().OnError(() => { }),
+                result.Async().OnError(() => 1),
 
-                Task.FromResult(result).Either(() => { }, () => { }),
-                Task.FromResult(result).Either(() => 1, () => { }),
-                Task.FromResult(result).Either(() => { }, () => 1),
-                Task.FromResult(result).Either(() => 1, () => 1),
+                result.Async().Either(() => { }, () => { }),
+                result.Async().Either(() => 1, () => { }),
+                result.Async().Either(() => { }, () => 1),
+                result.Async().Either(() => 1, () => 1),
 
-                Task.FromResult(result).Ensure(() => true),
-                Task.FromResult(result).Match(() => true, () => false),
+                result.Async().Ensure(() => true),
+                result.Async().Match(() => true, () => false),
             };
 
             Task.WaitAll(tasks);
@@ -108,7 +110,7 @@ namespace Railway.Test
         {
             results.Bind(() => Result.Success()).Count();
             results.Bind(() => Result<int>.Success(1)).Count();
-            results.Bind(() => Result<int>.Success(1), () => Result<int>.Error()).Count();
+            results.Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500)).Count();
             results.BindOnError(() => Result.Error()).Count();
             results.BindOnError(() => ResultWithError<int>.Error(1)).Count();
 
@@ -124,24 +126,7 @@ namespace Railway.Test
 
             results.Ensure(() => true).Count();
             results.Match(() => true, () => false).Count();
-        }
-
-        [TestMethod]
-        public void TestExtensionMethodsOfResult()
-        {
-            for (int i = 0; i < Settings.Iterations; i++)
-            {
-                TestExtensionMethodsOfResult(Result.Success());
-                TestExtensionMethodsOfResult(Result.Error());
-            }
-        }
-
-        private void TestExtensionMethodsOfResult(Result result)
-        {
-            result.Do(() => { });
-            result.Async();
-            result.Keep(() => 100, out int num);
-        }
+        }        
 
         [TestMethod]
         public void TestKeepMethodsOfResult()
@@ -160,6 +145,39 @@ namespace Railway.Test
             result.KeepOnError(() => 500, out int eCode);
             result.KeepEither(() => 100, () => 500, out int statusCode);
             result.KeepEither(() => 100, () => 500, out int successCode, out int errorCode);
+        }
+
+        [TestMethod]
+        public void TestLargeContent()
+        {
+
+            for (int i = 0; i < Settings.Iterations; i++)
+            {
+                TestLargeContent(Result.Error());
+                TestLargeContent(Result.Success());
+            }
+        }
+
+        private void TestLargeContent(Result result)
+        {
+            result.Bind(() => Result.Success());
+            result.Bind(() => Result<string>.Success(LargeContent));
+            result.Bind(() => Result<string, string>.Success(LargeContent), () => Result<string, string>.Error(LargeContent));
+            result.BindOnError(() => ResultWithError<string>.Error(LargeContent));
+            result.BindOnError(() => Result.Error());
+
+            result.OnSuccess(() => { });
+            result.OnSuccess(() => LargeContent);
+            result.OnError(() => { });
+            result.OnError(() => LargeContent);
+
+            result.Either(() => { }, () => { });
+            result.Either(() => LargeContent, () => { });
+            result.Either(() => { }, () => LargeContent);
+            result.Either(() => LargeContent, () => LargeContent);
+
+            result.Ensure(() => true);
+            result.Match(() => LargeContent, () => LargeContent);
         }
     }
 }

@@ -135,7 +135,6 @@ namespace KoeLib.Patterns.Railway.Results
             return this;
         }
 
-
         public Result<TValue, TError> OnSuccess(Action<TValue> onSuccess)
         {
             Args.ExceptionIfNull( onSuccess, nameof(onSuccess));
@@ -166,9 +165,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? new Result<TValue, TNewError>(_value) : onError(_error);
-        }
-
-       
+        }       
 
         public Result<TValue, TError> Either(Action<TValue> onSuccess, Action<TError> onError)
         {
