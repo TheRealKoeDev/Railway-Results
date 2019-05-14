@@ -89,7 +89,7 @@ namespace Railway.Test.Performance
 
                 result.Async().Ensure(() => true, () => 500),
                 result.Async().Match(() => true, error => false),
-        };
+            };
 
             Task.WaitAll(tasks);
         }

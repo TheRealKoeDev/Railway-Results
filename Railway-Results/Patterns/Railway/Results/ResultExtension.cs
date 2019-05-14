@@ -10,10 +10,6 @@ namespace KoeLib.Patterns.Railway.Results
     [DebuggerStepThrough]
     public static class ResultExtension
     {
-        public static Task<TResult> Async<TResult>(this TResult result)
-           where TResult : IResult
-           => Task.FromResult(result);
-
         public static TResult BindBoth<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> func)
             where TResult : IResult
             => target.Bind(func, func);

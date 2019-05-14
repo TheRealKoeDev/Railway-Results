@@ -5,6 +5,7 @@ using KoeLib.Patterns.Railway.Tasks;
 using KoeLib.Patterns.Railway.Linq;
 using KoeLib.Patterns.Railway.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
 
 namespace Railway.Test.Performance
 {
@@ -150,7 +151,6 @@ namespace Railway.Test.Performance
         [TestMethod]
         public void TestLargeContent()
         {
-
             for (int i = 0; i < Settings.Iterations; i++)
             {
                 TestLargeContent(Result.Error());
