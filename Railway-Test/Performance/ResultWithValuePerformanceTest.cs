@@ -11,33 +11,16 @@ namespace Railway.Test.Performance
     [TestClass]
     [DoNotParallelize]
     [TestCategory("Performance")]
-    public class ResultWithValuePerformanceTest
+    public class ResultWithValuePerformanceTest : PerformanceTestBase<Result<int>, Result<string>>
     {
-        private readonly string LargeContent = new string('*', Settings.LargeContentSize);
-        private readonly Result<int>[] Successes = new Result<int>[Settings.ItemCount];
-        private readonly Result<int>[] Errors = new Result<int>[Settings.ItemCount];
+        protected override Result<int> Success => Result<int>.Success(100);
+        protected override Result<int> Error => Result<int>.Error();
 
-        [TestInitialize]
-        public void Initialize()
-        {
-            for (int i = 0; i < Settings.ItemCount; i++)
-            {
-                Successes[i] = Result<int>.Success(100);
-                Errors[i] = Result<int>.Error();
-            }
-        }
+        protected override Result<string> LargeContentSuccess => Result<string>.Success(LargeContent);
+        protected override Result<string> LargeContentError => Result<string>.Error();
 
-        [TestMethod]
-        public void TestSingleResult()
-        {
-            for (int i = 0; i < Settings.Iterations; i++)
-            {
-                TestSingleResult(Result<int>.Success(100));
-                TestSingleResult(Result<int>.Error());
-            }
-        }
 
-        private void TestSingleResult(Result<int> result)
+        protected override void TestSingleResult(Result<int> result)
         {
             result.Bind(value => Result.Success());
             result.Bind(value => Result<int>.Success(101));
@@ -59,17 +42,7 @@ namespace Railway.Test.Performance
             result.Match(value => true, () => false);
         }
 
-        [TestMethod]
-        public void TestTaskOfResult()
-        {
-            for (int i = 0; i < Settings.Iterations; i++)
-            {
-                TestTaskOfResult(Result<int>.Success(100));
-                TestTaskOfResult(Result<int>.Error());
-            }
-        }
-
-        private void TestTaskOfResult(Result<int> result)
+        protected override void TestTaskOfResult(Result<int> result)
         {
             Task[] tasks = new Task[]
             {
@@ -96,17 +69,7 @@ namespace Railway.Test.Performance
             Task.WaitAll(tasks);
         }
 
-        [TestMethod]
-        public void TestIEnumerableOfResult()
-        {
-            for (int i = 0; i < Settings.Iterations / Settings.ItemCount; i++)
-            {
-                TestIEnumerableOfResult(Successes);
-                TestIEnumerableOfResult(Errors);
-            }
-        }
-
-        private void TestIEnumerableOfResult(Result<int>[] results)
+        protected override void TestIEnumerableOfResult(Result<int>[] results)
         {
             results.Bind(value => Result.Success()).Count();
             results.Bind(value => Result<int>.Success(101)).Count();
@@ -128,17 +91,7 @@ namespace Railway.Test.Performance
             results.Match(value => true, () => false).Count();
         }
 
-        [TestMethod]
-        public void TestKeepMethodsOfResult()
-        {
-            for (int i = 0; i < Settings.Iterations; i++)
-            {
-                TestKeepMethodsOfResult(Result<int>.Success(100));
-                TestKeepMethodsOfResult(Result<int>.Error());
-            }
-        }
-
-        private void TestKeepMethodsOfResult(Result<int> result)
+        protected override void TestKeepMethodsOfResult(Result<int> result)
         {
             result.Keep(() => 100, out int num);
             result.KeepOnSuccess(value => 100, out int sCode);
@@ -146,18 +99,8 @@ namespace Railway.Test.Performance
             result.KeepEither(value => 100, () => 500, out int statusCode);
             result.KeepEither(value => 100, () => 500, out int successCode, out int errorCode);
         }
-       
-        [TestMethod]
-        public void TestLargeContent()
-        {            
-            for (int i = 0; i < Settings.Iterations; i++)
-            {
-                TestLargeContent(Result<string>.Error());
-                TestLargeContent(Result<string>.Success(LargeContent));                
-            }
-        }
 
-        private void TestLargeContent(Result<string> result)
+        protected override void TestLargeContent(Result<string> result)
         {
             result.Bind(value => Result.Success());
             result.Bind(value => Result<string>.Success(value));

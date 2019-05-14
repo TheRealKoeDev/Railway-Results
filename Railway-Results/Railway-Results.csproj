@@ -3,9 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <RootNamespace>KoeLib</RootNamespace>
-    <ApplicationIcon />
+    <ApplicationIcon></ApplicationIcon>
     <OutputType>Library</OutputType>
     <StartupObject />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>false</SignAssembly>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/TheRealKoeDev/Railway-Results</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TheRealKoeDev/Railway-Results</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Company>-</Company>
+    <Authors>Sebastian Körner(KoeDev)</Authors>
+    <PackageIconUrl></PackageIconUrl>
+    <Copyright>MIT</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants />
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
 </Project>
