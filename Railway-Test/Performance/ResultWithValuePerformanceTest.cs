@@ -3,7 +3,6 @@ using KoeLib.Patterns.Railway.Results;
 using KoeLib.Patterns.Railway.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Railway.Test.Performance

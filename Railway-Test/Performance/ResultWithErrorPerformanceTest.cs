@@ -2,6 +2,7 @@
 using KoeLib.Patterns.Railway.Results;
 using KoeLib.Patterns.Railway.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Railway.Test.Performance
@@ -68,24 +69,24 @@ namespace Railway.Test.Performance
 
         protected override void TestIEnumerableOfResult(ResultWithError<int>[] results)
         {
-            results.Bind(() => ResultWithError<int>.Success());
-            results.Bind(() => Result<int, int>.Success(100));
-            results.Bind(() => Result<int, int>.Success(101), error => Result<int, int>.Error(500));
-            results.BindOnError(error => ResultWithError<int>.Error(500));
-            results.BindOnError(error => Result.Error());
+            results.Bind(() => ResultWithError<int>.Success()).Count();
+            results.Bind(() => Result<int, int>.Success(100)).Count();
+            results.Bind(() => Result<int, int>.Success(101), error => Result<int, int>.Error(500)).Count();
+            results.BindOnError(error => ResultWithError<int>.Error(500)).Count();
+            results.BindOnError(error => Result.Error()).Count();
 
-            results.OnSuccess(() => { });
-            results.OnSuccess(() => 101);
-            results.OnError(error => { });
-            results.OnError(error => 500);
+            results.OnSuccess(() => { }).Count();
+            results.OnSuccess(() => 101).Count();
+            results.OnError(error => { }).Count();
+            results.OnError(error => 500).Count();
 
-            results.Either(() => { }, error => { });
-            results.Either(() => 101, error => { });
-            results.Either(() => { }, error => 500);
-            results.Either(() => 101, error => 500);
+            results.Either(() => { }, error => { }).Count();
+            results.Either(() => 101, error => { }).Count();
+            results.Either(() => { }, error => 500).Count();
+            results.Either(() => 101, error => 500).Count();
 
-            results.Ensure(() => true, () => 500);
-            results.Match(() => true, error => false);
+            results.Ensure(() => true, () => 500).Count();
+            results.Match(() => true, error => false).Count();
         }
 
         protected override void TestKeepMethodsOfResult(ResultWithError<int> result)
