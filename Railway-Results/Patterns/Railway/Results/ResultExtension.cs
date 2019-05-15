@@ -45,5 +45,12 @@ namespace KoeLib.Patterns.Railway.Results
 
         public static T Match<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> func)
             => target.Match(func, func);
+
+        public static TryCatchResult<T> Try<TResult, T>(this TResult result, Func<TResult, T> resultFunc)
+           where TResult : IResult
+        {
+            Args.ExceptionIfNull(resultFunc, nameof(resultFunc));
+            return new TryCatchResult<T>(() => resultFunc(result));
+        }
     }
 }

@@ -26,6 +26,8 @@ namespace KoeLib.Patterns.Railway.Results
         public static Result Error()
             => new Result(false);
 
+        public static TryCatchResult<T> Try<T>(Func<T> resultFunc) => new TryCatchResult<T>(resultFunc);
+
         public static Result Combine(params Result[] results)
         {
             foreach (Result result in results ?? new Result[0])
