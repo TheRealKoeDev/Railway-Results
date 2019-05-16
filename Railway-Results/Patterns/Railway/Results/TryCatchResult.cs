@@ -1,10 +1,12 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace KoeLib.Patterns.Railway.Results
 {
+    [DebuggerStepThrough]
     public sealed class TryCatchResult<T>
     {
         private readonly Func<T> _resultFunc;
