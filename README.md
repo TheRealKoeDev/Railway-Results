@@ -13,11 +13,3 @@ NameSpace: KoeLib.Patterns.Railway
 * [ResultWithValue](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValue)
 * [ResultWithError](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithError)
 * [ResultWithValueOrError](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValueOrError)
-
-
-## Usage ##
-
-* All Results have the methods Do, OnSuccess, OnError, Either, Match, Bind, BindError, Keep, Ensure.
-* If a Result has a Value and OnSuccess, Either, Match, Keep or Ensure is called the path that handles the Success requires the usage of the value. The same goes for the Error.
-* All Methods throw an ArgumentNullException if a parameter of Action or Func is null.
-* Exceptions are not handled by the Results.
