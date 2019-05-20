@@ -9,10 +9,10 @@ NameSpace: KoeLib.Patterns.Railway
 * IEnumerable Extensions for Monads: KoeLib.Patterns.Railway.Linq
 
 ## Monads
-* [Result](/TheRealKoeDev/Railway-Results/wiki/Result)
-* [ResultWithValue](/TheRealKoeDev/Railway-Results/wiki/ResultWithValue)
-* [ResultWithError](/TheRealKoeDev/Railway-Results/wiki/ResultWithError)
-* [ResultWithValueOrError](/TheRealKoeDev/Railway-Results/wiki/ResultWithValueOrError)
+* [Result](https://github.com/TheRealKoeDev/Railway-Results/wiki/Result)
+* [ResultWithValue](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValue)
+* [ResultWithError](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithError)
+* [ResultWithValueOrError](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValueOrError)
 
 
 ## Usage ##
