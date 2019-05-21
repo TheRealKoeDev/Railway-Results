@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>KoeLib</RootNamespace>
     <ApplicationIcon></ApplicationIcon>
     <OutputType>Library</OutputType>
@@ -18,10 +18,11 @@
     <Copyright>MIT</Copyright>
     <Description>Monads for easy and compact error handling with Railway Oriented Programming.
 </Description>
-    <PackageTags>railway result functional railway-oriented railwayoriented monad</PackageTags>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.1.1</AssemblyVersion>
-    <FileVersion>1.0.1.1</FileVersion>
+    <PackageTags>railway result railway oriented programming rop functional monad csharp C#</PackageTags>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.1</AssemblyVersion>
+    <FileVersion>1.0.2.1</FileVersion>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

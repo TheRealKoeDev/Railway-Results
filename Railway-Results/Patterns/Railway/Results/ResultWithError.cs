@@ -25,6 +25,12 @@ namespace KoeLib.Patterns.Railway.Results
             _isError = true;
         }
 
+        public static ResultWithError<TError> Create(bool success, Func<TError> errorFunc)
+        {
+            Args.ExceptionIfNull(errorFunc, nameof(errorFunc));
+            return success ? new ResultWithError<TError>() : new ResultWithError<TError>(errorFunc());
+        }
+
         public static ResultWithError<TError> Success()
             => new ResultWithError<TError>();
 

@@ -20,6 +20,8 @@ namespace KoeLib.Patterns.Railway.Results
             _isSuccess = success;            
         }
 
+        public static Result Create(bool success) => new Result(success);
+
         public static Result Success()
             => new Result(true);
 

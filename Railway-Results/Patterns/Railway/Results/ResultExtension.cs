@@ -10,7 +10,7 @@ namespace KoeLib.Patterns.Railway.Results
     [DebuggerStepThrough]
     public static class ResultExtension
     {
-        public static TResult BindBoth<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> func)
+        public static TResult BindEither<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> func)
             where TResult : IResult
             => target.Bind(func, func);
 
@@ -43,7 +43,7 @@ namespace KoeLib.Patterns.Railway.Results
             return target;
         }
 
-        public static T Match<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> func)
+        public static T MatchEither<T, TValueError>(this Result<TValueError, TValueError> target, Func<TValueError, T> func)
             => target.Match(func, func);
 
         public static TryCatchResult<T> Try<TResult, T>(this TResult result, Func<TResult, T> resultFunc)
