@@ -10,7 +10,7 @@ namespace Railway.Test.Performance
     [TestClass]
     [DoNotParallelize]
     [TestCategory("Performance")]
-    public class ResultWithValueOrErrorPerformanceTest : PerformanceTestBase<Result<int, int>, Result<string, string>>
+    public class ResultOfValueOrErrorPerformanceTest : PerformanceTestBase<Result<int, int>, Result<string, string>>
     {
         protected override Result<int, int> Success => Result<int, int>.Success(100);
         protected override Result<int, int> Error => Result<int, int>.Error(500);
@@ -20,7 +20,7 @@ namespace Railway.Test.Performance
 
         protected override void TestSingleResult(Result<int, int> result)
         {
-            result.Bind(value => ResultWithError<int>.Success());
+            result.Bind(value => ResultOrError<int>.Success());
             result.Bind(value => Result<int, int>.Success(101));
             result.Bind(value => Result<int, int>.Success(101), error => Result<int, int>.Error(500));
             result.BindOnError(error => Result<int>.Error());
@@ -44,7 +44,7 @@ namespace Railway.Test.Performance
         {
             Task[] tasks = new Task[]
             {
-                result.Async().Bind(value => ResultWithError<int>.Success()),
+                result.Async().Bind(value => ResultOrError<int>.Success()),
                 result.Async().Bind(value => Result<int, int>.Success(101)),
                 result.Async().Bind(value => Result<int, int>.Success(101), error => Result<int, int>.Error(500)),
                 result.Async().BindOnError(error => Result<int>.Error()),
@@ -69,7 +69,7 @@ namespace Railway.Test.Performance
 
         protected override void TestIEnumerableOfResult(Result<int, int>[] results)
         {
-            results.Bind(value => ResultWithError<int>.Success()).Count();
+            results.Bind(value => ResultOrError<int>.Success()).Count();
             results.Bind(value => Result<int, int>.Success(101)).Count();
             results.Bind(value => Result<int, int>.Success(101), error => Result<int, int>.Error(500)).Count();
             results.BindOnError(error => Result<int>.Error()).Count();
@@ -100,7 +100,7 @@ namespace Railway.Test.Performance
 
         protected override void TestLargeContent(Result<string, string> result)
         {
-            result.Bind(value => ResultWithError<string>.Success());
+            result.Bind(value => ResultOrError<string>.Success());
             result.Bind(value => Result<string, string>.Success(value));
             result.Bind(value => Result<string, string>.Success(value), error => Result<string, string>.Error(error));
             result.BindOnError(error => Result<string>.Error());

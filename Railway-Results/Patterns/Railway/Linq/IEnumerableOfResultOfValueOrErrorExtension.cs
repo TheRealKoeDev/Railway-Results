@@ -40,6 +40,29 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static Result Combine<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, bool successIfEmpty = true)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    return successIfEmpty;
+                }
+
+                enumerator.Reset();
+
+                while (enumerator.MoveNext())
+                {
+                    if (!enumerator.Current.Match(_ => true, _ => false))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public static IEnumerable<Result<TValue, TError>> Filter<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, bool> successFilter, Func<TError, bool> errorFilter)
         {
             Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
@@ -79,7 +102,7 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> AsResultsWithError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
+        public static IEnumerable<ResultOrError<TError>> AsResultsWithError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
             using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())
@@ -103,7 +126,7 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> Bind<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, ResultWithError<TError>> onSuccess)
+        public static IEnumerable<ResultOrError<TError>> Bind<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TValue, ResultOrError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())

@@ -10,10 +10,10 @@ namespace KoeLib.Patterns.Railway.Linq
     [DebuggerStepThrough]
     public static class IEnumerableOfErrorResultOfTErrorExtension
     {
-        public static IEnumerable<ResultWithError<TError>> Successes<TError>(this IEnumerable<ResultWithError<TError>> target)
+        public static IEnumerable<ResultOrError<TError>> Successes<TError>(this IEnumerable<ResultOrError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -25,10 +25,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> Errors<TError>(this IEnumerable<ResultWithError<TError>> target)
+        public static IEnumerable<ResultOrError<TError>> Errors<TError>(this IEnumerable<ResultOrError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -40,10 +40,33 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> Filter<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> successFilter, Func<TError, bool> errorFilter)
+        public static Result Combine<TError>(this IEnumerable<ResultOrError<TError>> target, bool successIfEmpty = true)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    return successIfEmpty;
+                }
+
+                enumerator.Reset();
+
+                while (enumerator.MoveNext())
+                {
+                    if (!enumerator.Current.Match(() => true, _ => false))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static IEnumerable<ResultOrError<TError>> Filter<TError>(this IEnumerable<ResultOrError<TError>> target, Func<bool> successFilter, Func<TError, bool> errorFilter)
         {
             Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -55,10 +78,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result> AsPlainResults<TError>(this IEnumerable<ResultWithError<TError>> target)
+        public static IEnumerable<Result> AsPlainResults<TError>(this IEnumerable<ResultOrError<TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -67,10 +90,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }        
 
-        public static IEnumerable<ResultWithError<TError>> Bind<TError>(this IEnumerable<ResultWithError<TError>> target, Func<ResultWithError<TError>> onSuccess)
+        public static IEnumerable<ResultOrError<TError>> Bind<TError>(this IEnumerable<ResultOrError<TError>> target, Func<ResultOrError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -79,10 +102,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue, TError>> Bind<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<Result<TValue, TError>> onSuccess)
+        public static IEnumerable<Result<TValue, TError>> Bind<TValue, TError>(this IEnumerable<ResultOrError<TError>> target, Func<Result<TValue, TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -91,11 +114,11 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<TResult> Bind<TError, TResult>(this IEnumerable<ResultWithError<TError>> target, Func<TResult> onSuccess, Func<TError, TResult> onError)
+        public static IEnumerable<TResult> Bind<TError, TResult>(this IEnumerable<ResultOrError<TError>> target, Func<TResult> onSuccess, Func<TError, TResult> onError)
             where TResult : IResult
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -104,10 +127,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TNewError>> BindOnError<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, ResultWithError<TNewError>> onError)
+        public static IEnumerable<ResultOrError<TNewError>> BindOnError<TError, TNewError>(this IEnumerable<ResultOrError<TError>> target, Func<TError, ResultOrError<TNewError>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -116,10 +139,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result> BindOnError<TError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, Result> onError)
+        public static IEnumerable<Result> BindOnError<TError>(this IEnumerable<ResultOrError<TError>> target, Func<TError, Result> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -128,10 +151,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> OnSuccess<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess)
+        public static IEnumerable<ResultOrError<TError>> OnSuccess<TError>(this IEnumerable<ResultOrError<TError>> target, Action onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -140,10 +163,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess)
+        public static IEnumerable<Result<TValue, TError>> OnSuccess<TValue, TError>(this IEnumerable<ResultOrError<TError>> target, Func<TValue> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -152,10 +175,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> OnError<TError>(this IEnumerable<ResultWithError<TError>> target, Action<TError> onError)
+        public static IEnumerable<ResultOrError<TError>> OnError<TError>(this IEnumerable<ResultOrError<TError>> target, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -164,10 +187,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TNewError>> OnError<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TError, TNewError> onError)
+        public static IEnumerable<ResultOrError<TNewError>> OnError<TError, TNewError>(this IEnumerable<ResultOrError<TError>> target, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -176,10 +199,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
         
-        public static IEnumerable<ResultWithError<TError>> Either<TError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess, Action<TError> onError)
+        public static IEnumerable<ResultOrError<TError>> Either<TError>(this IEnumerable<ResultOrError<TError>> target, Action onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -188,10 +211,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue, TError>> Either<TValue, TError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess, Action<TError> onError)
+        public static IEnumerable<Result<TValue, TError>> Either<TValue, TError>(this IEnumerable<ResultOrError<TError>> target, Func<TValue> onSuccess, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -200,10 +223,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TNewError>> Either<TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Action onSuccess, Func<TError, TNewError> onError)
+        public static IEnumerable<ResultOrError<TNewError>> Either<TError, TNewError>(this IEnumerable<ResultOrError<TError>> target, Action onSuccess, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -212,10 +235,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<Result<TValue, TNewError>> Either<TValue, TError, TNewError>(this IEnumerable<ResultWithError<TError>> target, Func<TValue> onSuccess, Func<TError, TNewError> onError)
+        public static IEnumerable<Result<TValue, TNewError>> Either<TValue, TError, TNewError>(this IEnumerable<ResultOrError<TError>> target, Func<TValue> onSuccess, Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -224,10 +247,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<ResultWithError<TError>> Ensure<TError>(this IEnumerable<ResultWithError<TError>> target, Func<bool> condition, Func<TError> errorFunc)
+        public static IEnumerable<ResultOrError<TError>> Ensure<TError>(this IEnumerable<ResultOrError<TError>> target, Func<bool> condition, Func<TError> errorFunc)
         {
             Args.ExceptionIfNull(target, nameof(target), condition, nameof(condition), errorFunc, nameof(errorFunc));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -236,10 +259,10 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
-        public static IEnumerable<T> Match<T, TError>(this IEnumerable<ResultWithError<TError>> target, Func<T> onSuccess, Func<TError, T> onError)
+        public static IEnumerable<T> Match<T, TError>(this IEnumerable<ResultOrError<TError>> target, Func<T> onSuccess, Func<TError, T> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
-            using (IEnumerator<ResultWithError<TError>> enumerator = target.GetEnumerator())
+            using (IEnumerator<ResultOrError<TError>> enumerator = target.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {

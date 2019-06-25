@@ -36,12 +36,6 @@ namespace KoeLib.Patterns.Railway.Results
             _error = error;
         }
 
-        public static Result<TValue, TError> Create(bool success, Func<TValue> valueFunc, Func<TError> errorFunc)
-        {
-            Args.ExceptionIfNull(valueFunc, nameof(valueFunc), errorFunc, nameof(errorFunc));
-            return success ? new Result<TValue, TError>(valueFunc()) : new Result<TValue, TError>(errorFunc());
-        }
-
         public static Result<TValue, TError> Success(TValue value)
             => new Result<TValue, TError>(value);
 
@@ -60,14 +54,14 @@ namespace KoeLib.Patterns.Railway.Results
         public static implicit operator Result<TValue>(Result<TValue, TError> result)
             => result._isSuccess ? result._value : Result<TValue>.Error();
 
-        public static implicit operator ResultWithError<TError>(Result<TValue, TError> result)
-            => result._isSuccess ? ResultWithError<TError>.Success() : result._error;       
+        public static implicit operator ResultOrError<TError>(Result<TValue, TError> result)
+            => result._isSuccess ? ResultOrError<TError>.Success() : result._error;       
 
         public Result AsPlainResult() => this;
         public Result<TValue> AsResultWithValue() => this;
-        public ResultWithError<TError> AsResultWithError() => this;
+        public ResultOrError<TError> AsResultWithError() => this;
 
-        public ResultWithError<TError> Bind(Func<TValue, ResultWithError<TError>> onSuccess)
+        public ResultOrError<TError> Bind(Func<TValue, ResultOrError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess(_value) : _error;

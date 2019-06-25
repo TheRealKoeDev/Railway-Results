@@ -23,13 +23,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             _isSuccess = true;
             _value = value;
-        }
-
-        public static Result<TValue> Create(bool success, Func<TValue> valueFunc)
-        {
-            Args.ExceptionIfNull(valueFunc, nameof(valueFunc));
-            return success ? new Result<TValue>(valueFunc()) : new Result<TValue>();
-        }
+        }        
 
         public static Result<TValue> Success(TValue value)
             => new Result<TValue>(value);

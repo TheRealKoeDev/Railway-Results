@@ -10,21 +10,21 @@ namespace Railway.Test.Performance
     [TestClass]
     [DoNotParallelize]
     [TestCategory("Performance")]
-    public class ResultWithErrorPerformanceTest : PerformanceTestBase<ResultWithError<int>, ResultWithError<string>>
+    public class ResultWithErrorPerformanceTest : PerformanceTestBase<Else<int>, Else<string>>
     {
-        protected override ResultWithError<int> Success => ResultWithError<int>.Success();
-        protected override ResultWithError<int> Error => ResultWithError<int>.Error(500);
+        protected override Else<int> Success => Else<int>.Success();
+        protected override Else<int> Error => Else<int>.Error(500);
 
-        protected override ResultWithError<string> LargeContentSuccess => ResultWithError<string>.Success();
-        protected override ResultWithError<string> LargeContentError => ResultWithError<string>.Error(LargeContent);
+        protected override Else<string> LargeContentSuccess => Else<string>.Success();
+        protected override Else<string> LargeContentError => Else<string>.Error(LargeContent);
 
-        protected override void TestSingleResult(ResultWithError<int> result)
+        protected override void TestSingleResult(Else<int> result)
         {
-            result.Bind(() => ResultWithError<int>.Success());
-            result.Bind(() => Result<int, int>.Success(100));
-            result.Bind(() => Result<int, int>.Success(101), error => Result<int, int>.Error(500));
-            result.BindOnError(error => ResultWithError<int>.Error(500));
-            result.BindOnError(error => Result.Error());
+            result.Bind(() => Else<int>.Success());
+            result.Bind(() => Either<int, int>.Success(100));
+            result.Bind(() => Either<int, int>.Success(101), error => Either<int, int>.Error(500));
+            result.BindOnError(error => Else<int>.Error(500));
+            result.BindOnError(error => Switch.Error());
 
             result.OnSuccess(() => { });
             result.OnSuccess(() => 101);
@@ -40,15 +40,15 @@ namespace Railway.Test.Performance
             result.Match(() => true, error => false);
         }
 
-        protected override void TestTaskOfResult(ResultWithError<int> result)
+        protected override void TestTaskOfResult(Else<int> result)
         {
             Task[] tasks = new Task[]
             {
-                result.Async().Bind(() => ResultWithError<int>.Success()),
-                result.Async().Bind(() => Result<int, int>.Success(100)),
-                result.Async().Bind(() => Result<int, int>.Success(101), error => Result<int, int>.Error(500)),
-                result.Async().BindOnError(error => ResultWithError<int>.Error(500)),
-                result.Async().BindOnError(error => Result.Error()),
+                result.Async().Bind(() => Else<int>.Success()),
+                result.Async().Bind(() => Either<int, int>.Success(100)),
+                result.Async().Bind(() => Either<int, int>.Success(101), error => Either<int, int>.Error(500)),
+                result.Async().BindOnError(error => Else<int>.Error(500)),
+                result.Async().BindOnError(error => Switch.Error()),
 
                 result.Async().OnSuccess(() => { }),
                 result.Async().OnSuccess(() => 101),
@@ -67,13 +67,13 @@ namespace Railway.Test.Performance
             Task.WaitAll(tasks);
         }
 
-        protected override void TestIEnumerableOfResult(ResultWithError<int>[] results)
+        protected override void TestIEnumerableOfResult(Else<int>[] results)
         {
-            results.Bind(() => ResultWithError<int>.Success()).Count();
-            results.Bind(() => Result<int, int>.Success(100)).Count();
-            results.Bind(() => Result<int, int>.Success(101), error => Result<int, int>.Error(500)).Count();
-            results.BindOnError(error => ResultWithError<int>.Error(500)).Count();
-            results.BindOnError(error => Result.Error()).Count();
+            results.Bind(() => Else<int>.Success()).Count();
+            results.Bind(() => Either<int, int>.Success(100)).Count();
+            results.Bind(() => Either<int, int>.Success(101), error => Either<int, int>.Error(500)).Count();
+            results.BindOnError(error => Else<int>.Error(500)).Count();
+            results.BindOnError(error => Switch.Error()).Count();
 
             results.OnSuccess(() => { }).Count();
             results.OnSuccess(() => 101).Count();
@@ -89,7 +89,7 @@ namespace Railway.Test.Performance
             results.Match(() => true, error => false).Count();
         }
 
-        protected override void TestKeepMethodsOfResult(ResultWithError<int> result)
+        protected override void TestKeepMethodsOfResult(Else<int> result)
         {
             result.Keep(() => 100, out int num);
             result.KeepOnSuccess(() => 100, out int sCode);
@@ -98,13 +98,13 @@ namespace Railway.Test.Performance
             result.KeepEither(() => 100, error => 500, out int successCode, out int errorCode);
         }
 
-        protected override void TestLargeContent(ResultWithError<string> result)
+        protected override void TestLargeContent(Else<string> result)
         {
-            result.Bind(() => ResultWithError<string>.Success());
-            result.Bind(() => Result<string, string>.Success(LargeContent));
-            result.Bind(() => Result<string, string>.Success(LargeContent), error => Result<string, string>.Error(error));
-            result.BindOnError(error => ResultWithError<string>.Error(error));
-            result.BindOnError(error => Result<string, string>.Error(error));
+            result.Bind(() => Else<string>.Success());
+            result.Bind(() => Either<string, string>.Success(LargeContent));
+            result.Bind(() => Either<string, string>.Success(LargeContent), error => Either<string, string>.Error(error));
+            result.BindOnError(error => Else<string>.Error(error));
+            result.BindOnError(error => Either<string, string>.Error(error));
 
             result.OnSuccess(() => { });
             result.OnSuccess(() => LargeContent);

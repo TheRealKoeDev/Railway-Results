@@ -21,6 +21,17 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         public static Result Create(bool success) => new Result(success);
+        public static Result<TValue> Create<TValue>(bool success, Func<TValue> valueFunc)
+        {
+            Args.ExceptionIfNull(valueFunc, nameof(valueFunc));
+            return success ? Result<TValue>.Success(valueFunc()) : Result<TValue>.Error();
+        }
+
+        public static Result<TValue, TError> Create<TValue, TError>(bool success, Func<TValue> valueFunc, Func<TError> errorFunc)
+        {
+            Args.ExceptionIfNull(valueFunc, nameof(valueFunc), errorFunc, nameof(errorFunc));
+            return success ? Result<TValue, TError>.Success(valueFunc()) : Result<TValue, TError>.Error(errorFunc());
+        }
 
         public static Result Success()
             => new Result(true);
@@ -70,10 +81,10 @@ namespace KoeLib.Patterns.Railway.Results
             return _isSuccess ? this : onError();
         }
 
-        public ResultWithError<TError> BindOnError<TError>(Func<ResultWithError<TError>> onError)
+        public ResultOrError<TError> BindOnError<TError>(Func<ResultOrError<TError>> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? ResultWithError<TError>.Success() : onError();
+            return _isSuccess ? ResultOrError<TError>.Success() : onError();
         }
 
         public Result OnSuccess(Action onSuccess)
@@ -102,10 +113,10 @@ namespace KoeLib.Patterns.Railway.Results
             return this;
         }
 
-        public ResultWithError<TError> OnError<TError>(Func<TError> onError)
+        public ResultOrError<TError> OnError<TError>(Func<TError> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? ResultWithError<TError>.Success() : onError();
+            return _isSuccess ? ResultOrError<TError>.Success() : onError();
         }
 
         public Result Either(Action onSuccess, Action onError)
@@ -133,13 +144,13 @@ namespace KoeLib.Patterns.Railway.Results
             return Result<TValue>.Error();
         }
 
-        public ResultWithError<TError> Either<TError>(Action onSuccess, Func<TError> onError)
+        public ResultOrError<TError> Either<TError>(Action onSuccess, Func<TError> onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
             if (_isSuccess)
             {
                 onSuccess();
-                return ResultWithError<TError>.Success();
+                return ResultOrError<TError>.Success();
             }
             return onError();
         }

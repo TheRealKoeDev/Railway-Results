@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KoeLib.Patterns.Railway.Tasks
 {
-    public static class ResultToTaskExtension
+    public static class TaskOfIResultExtension
     {
         public static Task<TResult> Async<TResult>(this TResult result)
            where TResult : IResult

@@ -34,7 +34,7 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.BindOnError(onError));
         }
 
-        public static Task<ResultWithError<TError>> BindOnError<TError>(this Task<Result> target, Func<ResultWithError<TError>> onError)
+        public static Task<ResultOrError<TError>> BindOnError<TError>(this Task<Result> target, Func<ResultOrError<TError>> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
             return target.ContinueWith(task => task.Result.BindOnError(onError));
@@ -58,7 +58,7 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.OnError(onError));
         }
 
-        public static Task<ResultWithError<TError>> OnError<TError>(this Task<Result> target, Func<TError> onError)
+        public static Task<ResultOrError<TError>> OnError<TError>(this Task<Result> target, Func<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
             return target.ContinueWith(task => task.Result.OnError(onError));
@@ -76,7 +76,7 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.Either(onSuccess, onError));
         }
 
-        public static Task<ResultWithError<TError>> Either<TError>(this Task<Result> target, Action onSuccess, Func<TError> onError)
+        public static Task<ResultOrError<TError>> Either<TError>(this Task<Result> target, Action onSuccess, Func<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess), onError, nameof(onError));
             return target.ContinueWith(task => task.Result.Either(onSuccess, onError));

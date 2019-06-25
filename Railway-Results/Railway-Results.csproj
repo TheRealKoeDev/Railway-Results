@@ -18,10 +18,10 @@
     <Copyright>MIT</Copyright>
     <Description>Monads for easy and compact error handling with Railway Oriented Programming.
 </Description>
-    <PackageTags>railway result railway oriented programming rop functional monad csharp C#</PackageTags>
-    <Version>1.0.2</Version>
-    <AssemblyVersion>1.0.2.1</AssemblyVersion>
-    <FileVersion>1.0.2.1</FileVersion>
+    <PackageTags>result railway oriented programming rop functional monad csharp C#</PackageTags>
+    <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.3.1</AssemblyVersion>
+    <FileVersion>1.0.3.1</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

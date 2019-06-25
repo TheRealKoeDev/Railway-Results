@@ -12,21 +12,21 @@ namespace Railway.Test.Performance
     [TestClass]
     [DoNotParallelize]
     [TestCategory("Performance")]
-    public class ResultPerformanceTest : PerformanceTestBase<Result, Result>
+    public class ResultPerformanceTest : PerformanceTestBase<KoeLib.Patterns.Railway.Results.Switch, KoeLib.Patterns.Railway.Results.Switch>
     {
-        protected override Result Success => Result.Success();
-        protected override Result Error => Result.Error();
+        protected override System.Diagnostics.Switch Success => KoeLib.Patterns.Railway.Results.Switch.Success();
+        protected override Switch Error => KoeLib.Patterns.Railway.Results.Switch.Error();
 
-        protected override Result LargeContentSuccess => Result.Success();
-        protected override Result LargeContentError => Result.Error();
+        protected override Switch LargeContentSuccess => KoeLib.Patterns.Railway.Results.Switch.Success();
+        protected override Switch LargeContentError => KoeLib.Patterns.Railway.Results.Switch.Error();
 
-        protected override void TestSingleResult(Result result)
+        protected override void TestSingleResult(KoeLib.Patterns.Railway.Results.Switch result)
         {
-            result.Bind(() => Result.Success());
-            result.Bind(() => Result<int>.Success(1));
-            result.Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500));
-            result.BindOnError(() => Result.Error());
-            result.BindOnError(() => ResultOrError<int>.Error(1));
+            result.Bind(() => KoeLib.Patterns.Railway.Results.Switch.Success());
+            result.Bind(() => If<int>.Success(1));
+            result.Bind(() => Either<int, int>.Success(101), () => Either<int, int>.Error(500));
+            result.BindOnError(() => KoeLib.Patterns.Railway.Results.Switch.Error());
+            result.BindOnError(() => Else<int>.Error(1));
 
             result.OnSuccess(() => { });
             result.OnSuccess(() => 1);
@@ -42,15 +42,15 @@ namespace Railway.Test.Performance
             result.Match(() => true, () => false);
         }        
 
-        protected override void TestTaskOfResult(Result result)
+        protected override void TestTaskOfResult(KoeLib.Patterns.Railway.Results.Switch result)
         {
             Task[] tasks = new Task[]
             {
-                result.Async().Bind(() => Result.Success()),
-                result.Async().Bind(() => Result<int>.Success(1)),
-                result.Async().Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500)),
-                result.Async().BindOnError(() => Result.Error()),
-                result.Async().BindOnError(() => ResultOrError<int>.Error(1)),
+                result.Async().Bind(() => KoeLib.Patterns.Railway.Results.Switch.Success()),
+                result.Async().Bind(() => If<int>.Success(1)),
+                result.Async().Bind(() => Either<int, int>.Success(101), () => Either<int, int>.Error(500)),
+                result.Async().BindOnError(() => KoeLib.Patterns.Railway.Results.Switch.Error()),
+                result.Async().BindOnError(() => Else<int>.Error(1)),
 
                 result.Async().OnSuccess(() => { }),
                 result.Async().OnSuccess(() => 1),
@@ -70,13 +70,13 @@ namespace Railway.Test.Performance
         }
         
 
-        protected override void TestIEnumerableOfResult(Result[] results)
+        protected override void TestIEnumerableOfResult(KoeLib.Patterns.Railway.Results.Switch[] results)
         {
-            results.Bind(() => Result.Success()).Count();
-            results.Bind(() => Result<int>.Success(1)).Count();
-            results.Bind(() => Result<int, int>.Success(101), () => Result<int, int>.Error(500)).Count();
-            results.BindOnError(() => Result.Error()).Count();
-            results.BindOnError(() => ResultOrError<int>.Error(1)).Count();
+            results.Bind(() => Switch.Success()).Count();
+            results.Bind(() => If<int>.Success(1)).Count();
+            results.Bind(() => Either<int, int>.Success(101), () => Either<int, int>.Error(500)).Count();
+            results.BindOnError(() => Switch.Error()).Count();
+            results.BindOnError(() => Else<int>.Error(1)).Count();
 
             results.OnSuccess(() => { }).Count();
             results.OnSuccess(() => 1).Count();
@@ -92,7 +92,7 @@ namespace Railway.Test.Performance
             results.Match(() => true, () => false).Count();
         }
 
-        protected override void TestKeepMethodsOfResult(Result result)
+        protected override void TestKeepMethodsOfResult(KoeLib.Patterns.Railway.Results.Switch result)
         {
             result.Keep(() => 100, out int num);
             result.KeepOnSuccess(() => 100, out int sCode);
@@ -101,13 +101,13 @@ namespace Railway.Test.Performance
             result.KeepEither(() => 100, () => 500, out int successCode, out int errorCode);
         }
 
-        protected override void TestLargeContent(Result result)
+        protected override void TestLargeContent(KoeLib.Patterns.Railway.Results.Switch result)
         {
-            result.Bind(() => Result.Success());
-            result.Bind(() => Result<string>.Success(LargeContent));
-            result.Bind(() => Result<string, string>.Success(LargeContent), () => Result<string, string>.Error(LargeContent));
-            result.BindOnError(() => ResultOrError<string>.Error(LargeContent));
-            result.BindOnError(() => Result.Error());
+            result.Bind(() => KoeLib.Patterns.Railway.Results.Switch.Success());
+            result.Bind(() => If<string>.Success(LargeContent));
+            result.Bind(() => Either<string, string>.Success(LargeContent), () => Either<string, string>.Error(LargeContent));
+            result.BindOnError(() => Else<string>.Error(LargeContent));
+            result.BindOnError(() => KoeLib.Patterns.Railway.Results.Switch.Error());
 
             result.OnSuccess(() => { });
             result.OnSuccess(() => LargeContent);

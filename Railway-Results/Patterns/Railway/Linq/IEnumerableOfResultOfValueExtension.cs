@@ -39,6 +39,29 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static Result Combine<TValue>(this IEnumerable<Result<TValue>> target, bool successIfEmpty = true)
+        {
+            Args.ExceptionIfNull(target, nameof(target));
+            using (IEnumerator<Result<TValue>> enumerator = target.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    return successIfEmpty;
+                }
+
+                enumerator.Reset();
+
+                while (enumerator.MoveNext())
+                {
+                    if (!enumerator.Current.Match(_ => true, () => false))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        
         public static IEnumerable<Result<TValue>> Filter<TValue>(this IEnumerable<Result<TValue>> target, Func<TValue, bool> successFilter, Func<bool> errorFilter)
         {
             Args.ExceptionIfNull(target, nameof(target), successFilter, nameof(successFilter), errorFilter, nameof(errorFilter));

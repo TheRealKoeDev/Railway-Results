@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace KoeLib.Patterns.Railway.Tasks
 {
     [DebuggerStepThrough]
-    public static class TaskOfResultWithValueOrErrorExtension
+    public static class TaskOfResultOfValueOrErrorExtension
     {
         public static Task<Result> AsPlainResult<TValue, TError>(this Task<Result<TValue, TError>> target)
         {
@@ -23,7 +23,7 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.AsResultWithValue());
         }
 
-        public static Task<ResultWithError<TError>> AsResultWithError<TValue, TError>(this Task<Result<TValue, TError>> target)
+        public static Task<ResultOrError<TError>> AsResultWithError<TValue, TError>(this Task<Result<TValue, TError>> target)
         {
             Args.ExceptionIfNull(target, nameof(target));
             return target.ContinueWith(task => task.Result.AsResultWithError());
@@ -47,7 +47,7 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.Bind(onSuccess));
         }
 
-        public static Task<ResultWithError<TError>> Bind<TValue, TError>(this Task<Result<TValue, TError>> target, Func<TValue, ResultWithError<TError>> onSuccess)
+        public static Task<ResultOrError<TError>> Bind<TValue, TError>(this Task<Result<TValue, TError>> target, Func<TValue, ResultOrError<TError>> onSuccess)
         {
             Args.ExceptionIfNull(target, nameof(target), onSuccess, nameof(onSuccess));
             return target.ContinueWith(task => task.Result.Bind(onSuccess));
