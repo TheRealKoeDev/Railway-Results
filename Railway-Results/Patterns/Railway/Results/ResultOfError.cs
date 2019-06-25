@@ -29,10 +29,10 @@ namespace KoeLib.Patterns.Railway.Results
 
         private readonly TError _error;
 
-        private ResultOrError(bool isError)
+        private ResultOrError(bool isSuccess)
         {
             _error = default;
-            _isSuccess = isError;
+            _isSuccess = isSuccess;
         }
 
         private ResultOrError(TError error)
