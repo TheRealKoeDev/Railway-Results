@@ -10,6 +10,6 @@ NameSpace: KoeLib.Patterns.Railway
 
 ## Monads
 * [Result](https://github.com/TheRealKoeDev/Railway-Results/wiki/Result)
-* [Result< Value >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValue)
-* [ResultOrError< Error >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithError)
-* [Result< Value, Error >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultWithValueOrError)
+* [Result< Value >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultOfValue)
+* [ResultOrError< Error >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultOrError)
+* [Result< Value, Error >](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultOfValueOrError)
