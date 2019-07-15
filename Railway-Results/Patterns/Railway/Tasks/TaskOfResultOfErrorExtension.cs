@@ -60,6 +60,12 @@ namespace KoeLib.Patterns.Railway.Tasks
             return target.ContinueWith(task => task.Result.OnSuccess(onSuccess));
         }
 
+        public static Task<ResultOrError<TError>> FixOnError<TError>(this Task<ResultOrError<TError>> target, Action<TError> onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            return target.ContinueWith(task => task.Result.FixOnError(onError));
+        }
+
         public static Task<ResultOrError<TError>> OnError<TError>(this Task<ResultOrError<TError>> target, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));

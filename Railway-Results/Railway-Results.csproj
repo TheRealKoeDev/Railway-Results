@@ -20,8 +20,8 @@
 </Description>
     <PackageTags>result railway oriented programming rop functional monad csharp C#</PackageTags>
     <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.1</AssemblyVersion>
-    <FileVersion>1.0.3.1</FileVersion>
+    <AssemblyVersion>1.0.4.1</AssemblyVersion>
+    <FileVersion>1.0.4.1</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

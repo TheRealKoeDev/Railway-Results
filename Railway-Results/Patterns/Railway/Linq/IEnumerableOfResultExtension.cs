@@ -148,6 +148,18 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<Result> FixOnError(this IEnumerable<Result> target, Action onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            using (IEnumerator<Result> enumerator = target.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.FixOnError(onError);
+                }
+            }
+        }
+
         public static IEnumerable<Result> OnError(this IEnumerable<Result> target, Action onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));

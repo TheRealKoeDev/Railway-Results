@@ -58,8 +58,8 @@ namespace KoeLib.Patterns.Railway.Results
             => result._isSuccess ? ResultOrError<TError>.Success() : result._error;       
 
         public Result AsPlainResult() => this;
-        public Result<TValue> AsResultWithValue() => this;
-        public ResultOrError<TError> AsResultWithError() => this;
+        public Result<TValue> AsResultOfValue() => this;
+        public ResultOrError<TError> AsResultOrError() => this;
 
         public ResultOrError<TError> Bind(Func<TValue, ResultOrError<TError>> onSuccess)
         {

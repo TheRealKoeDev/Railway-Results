@@ -199,6 +199,18 @@ namespace KoeLib.Patterns.Railway.Linq
             }
         }
 
+        public static IEnumerable<Result<TValue, TError>> FixOnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Func<TError, TValue> onError)
+        {
+            Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
+            using (IEnumerator<Result<TValue, TError>> enumerator = target.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current.FixOnError(onError);
+                }
+            }
+        }
+
         public static IEnumerable<Result<TValue, TError>> OnError<TValue, TError>(this IEnumerable<Result<TValue, TError>> target, Action<TError> onError)
         {
             Args.ExceptionIfNull(target, nameof(target), onError, nameof(onError));
