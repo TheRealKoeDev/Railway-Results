@@ -1,8 +1,6 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace KoeLib.Patterns.Railway.Results
 {
@@ -119,7 +117,13 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess(_value) : new Result<TNewValue>();
         }
-        
+
+        public Result<TValue> FixOnError(Func<TValue> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            return _isSuccess ? this : onError();
+        }
+
         public Result<TValue> OnError(Action onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));

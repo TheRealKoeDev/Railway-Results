@@ -1,15 +1,20 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KoeLib.Patterns.Railway.Results
 {
     [DebuggerStepThrough]
     public static class ResultExtension
     {
+        public static TNewResult BindResult<TResult, TNewResult>(this TResult target, Func<TResult, TNewResult> func)
+            where TResult : IResult
+            where TNewResult : IResult
+        {
+            Args.ExceptionIfNull(func, nameof(func));
+            return func(target);
+        }
+
         public static TResult BindEither<TValueError, TResult>(this Result<TValueError, TValueError> target, Func<TValueError, TResult> func)
             where TResult : IResult
             => target.Bind(func, func);

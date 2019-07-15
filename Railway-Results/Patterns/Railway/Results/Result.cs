@@ -1,8 +1,6 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace KoeLib.Patterns.Railway.Results
 {
@@ -101,6 +99,16 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess() : Result<TValue>.Error();
+        }
+
+        public Result FixOnError(Action onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            if (!_isSuccess)
+            {
+                onError();
+            }
+            return Success();
         }
 
         public Result OnError(Action onError)

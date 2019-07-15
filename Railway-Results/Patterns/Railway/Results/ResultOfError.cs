@@ -102,6 +102,16 @@ namespace KoeLib.Patterns.Railway.Results
             return _isSuccess ? onSuccess() : Result<TValue, TError>.Error(_error);
         }
 
+        public ResultOrError<TError> FixOnError(Action<TError> onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            if (!_isSuccess)
+            {
+                onError(_error);
+            }
+            return Success();
+        }
+
         public ResultOrError<TError> OnError(Action<TError> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
