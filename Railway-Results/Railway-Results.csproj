@@ -29,6 +29,7 @@
     <DefineConstants />
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>C:\Users\koern\source\repos\Railway-Results\Railway-Results\Railway-Results.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Railway-Results</name>
+    </assembly>
+    <members>
+        <member name="T:KoeLib.Patterns.Railway.Results.IResult">
+            <summary>
+            Is Interface of Results and a target for ExtensionMethods in <see cref="T:KoeLib.Patterns.Railway.Results.ResultExtension"/>
+            </summary>
+        </member>
+        <member name="T:KoeLib.Patterns.Railway.Results.Result">
+            <summary>
+            This is a simple Result without Value or Error
+            </summary>
+            <seealso cref="T:KoeLib.Patterns.Railway.Results.IResult" />
+        </member>
+        <member name="F:KoeLib.Patterns.Railway.Results.Result._isSuccess">
+            <summary>
+            Is True this is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/> or False if this is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.
+            </summary>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.#ctor(System.Boolean)">
+            <summary>
+            Creates a instance of <see cref="T:KoeLib.Patterns.Railway.Results.Result"/>.
+            </summary>
+            <param name="success">True for a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/> or False for a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.</param>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Create(System.Boolean)">
+            <summary>
+            Creates a instance of <see cref="T:KoeLib.Patterns.Railway.Results.Result"/>.
+            </summary>
+            <param name="success">True for a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/> or False for a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.</param>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Create``1(System.Boolean,System.Func{``0})">
+            <summary>
+            Creates a instance of <see cref="T:KoeLib.Patterns.Railway.Results.Result`1"/>.
+            </summary>
+            <typeparam name="TValue">The type of the Value.</typeparam>
+            <param name="success">True for a <see cref="M:KoeLib.Patterns.Railway.Results.Result`1.Success(`0)"/> or False for a <see cref="M:KoeLib.Patterns.Railway.Results.Result`1.Error"/>.</param>
+            <param name="valueFunc">Provides the <typeparamref name="TValue"/> in case of <see cref="M:KoeLib.Patterns.Railway.Results.Result`1.Success(`0)"/>.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Create``2(System.Boolean,System.Func{``0},System.Func{``1})">
+            <summary>
+            Creates a instance of <see cref="T:KoeLib.Patterns.Railway.Results.Result`2"/>.
+            </summary>
+            <typeparam name="TValue">The type of the Value.</typeparam>
+            <typeparam name="TError">The type of the Error.</typeparam>
+            <param name="success">True for a <see cref="M:KoeLib.Patterns.Railway.Results.Result`2.Success(`0)"/> or False for a <see cref="M:KoeLib.Patterns.Railway.Results.Result`2.Error(`1)"/>.</param>
+            <param name="valueFunc">Provides the <typeparamref name="TValue"/> in case of <see cref="M:KoeLib.Patterns.Railway.Results.Result`2.Success(`0)"/>.</param>
+            <param name="errorFunc">Provides the <typeparamref name="TError"/> in case of <see cref="M:KoeLib.Patterns.Railway.Results.Result`2.Error(`1)"/>.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Success">
+            <summary>
+            Creates a Success <see cref="T:KoeLib.Patterns.Railway.Results.Result"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Error">
+            <summary>
+            Creates a Error <see cref="T:KoeLib.Patterns.Railway.Results.Result"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Try``1(System.Func{``0})">
+            <summary>
+            Returns a <see cref="T:KoeLib.Patterns.Railway.Results.TryCatchResult`1"/> that executes the <paramref name="resultFunc"/> in a try-catch statement.
+            </summary>
+            <typeparam name="T">The return-value of <paramref name="resultFunc"/>.</typeparam>
+            <param name="resultFunc">The function that is executed in <see cref="T:KoeLib.Patterns.Railway.Results.TryCatchResult`1"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Combine(KoeLib.Patterns.Railway.Results.Result[])">
+            <summary>
+            Returns a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/> if <paramref name="results"/> is null or empty or only contains <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>,
+            otherwise it returns <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.
+            </summary>
+            <param name="results">The Array of <see cref="T:KoeLib.Patterns.Railway.Results.Result"/> that is being combined.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.op_Implicit(System.Boolean)~KoeLib.Patterns.Railway.Results.Result">
+            <summary>
+            Implicitly converts a <see cref="T:System.Boolean"/> to a <see cref="T:KoeLib.Patterns.Railway.Results.Result"/> by calling <see cref="M:KoeLib.Patterns.Railway.Results.Result.#ctor(System.Boolean)"/>.
+            </summary>
+            <param name="success"></param>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Bind(System.Func{KoeLib.Patterns.Railway.Results.Result})">
+            <summary>
+            Returns the <see cref="T:KoeLib.Patterns.Railway.Results.Result"/> of <paramref name="onSuccess"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>, otherwise returns a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/> without calling <paramref name="onSuccess"/>.
+            </summary>
+            <param name="onSuccess"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Bind``1(System.Func{KoeLib.Patterns.Railway.Results.Result{``0}})">
+            <summary>
+            Returns the <see cref="T:KoeLib.Patterns.Railway.Results.Result`1"/> of <paramref name="onSuccess"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>,
+            otherwise returns a <see cref="M:KoeLib.Patterns.Railway.Results.Result`1.Error"/> without calling <paramref name="onSuccess"/>.
+            </summary>
+            <typeparam name="TValue"></typeparam>
+            <param name="onSuccess">Is called and returned it This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.Bind``1(System.Func{``0},System.Func{``0})">
+            <summary>
+            Returns the <typeparamref name="TResult"/> of <paramref name="onSuccess"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>,
+            otherwise returns the <typeparamref name="TResult"/> of <paramref name="onError"/> if this is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.
+            </summary>
+            <typeparam name="TResult">The type of <see cref="T:KoeLib.Patterns.Railway.Results.IResult"/> that <paramref name="onSuccess"/> and <paramref name="onError"/> are returning.</typeparam>
+            <param name="onSuccess">Is called and returned as <typeparamref name="TResult"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/>.</param>
+            <param name="onError">Is called and returned as <typeparamref name="TResult"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:KoeLib.Patterns.Railway.Results.Result.BindOnError(System.Func{KoeLib.Patterns.Railway.Results.Result})">
+            <summary>
+            Returns the <see cref="T:KoeLib.Patterns.Railway.Results.Result"/> of <paramref name="onError"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>,
+            otherwise returns a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Success"/> without calling <paramref name="onError"/>.
+            </summary>
+            <param name="onError">Is called and returned as <see cref="T:KoeLib.Patterns.Railway.Results.Result"/> if This is a <see cref="M:KoeLib.Patterns.Railway.Results.Result.Error"/>.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="T:KoeLib.Patterns.Railway.Results.ResultOrError`1">
+            <summary>
+            Is a Monad without Value but with Error.
+            The DefaultValue of this struct is a <see cref="M:KoeLib.Patterns.Railway.Results.ResultOrError`1.Error(`0)"/> with the default value of <typeparamref name="TError"/>.
+            </summary>
+            <typeparam name="TError">The type of the Error.</typeparam>
+            <seealso cref="T:KoeLib.Patterns.Railway.Results.IResult" />
+        </member>
+        <member name="T:KoeLib.Patterns.Railway.Results.Result`1">
+            <summary>
+            Is a Monad with Value.
+            The DefaultValue of this struct has no Value and represents a failed Result.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <seealso cref="T:KoeLib.Patterns.Railway.Results.IResult" />
+        </member>
+        <member name="T:KoeLib.Patterns.Railway.Results.Result`2">
+            <summary>
+            <para>Is a Monad with Value and Error.</para>
+            The DefaultValue of this struct is a failed Result with the defaultvalue of <typeparamref name="TError"/>.
+            </summary>
+            <typeparam name="TValue">The type of the Value.</typeparam>
+            <typeparam name="TError">The type of the Error.</typeparam>
+            <seealso cref="T:KoeLib.Patterns.Railway.Results.IResult" />
+        </member>
+    </members>
+</doc>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace KoeLib.Patterns.Railway.Results
@@ -23,6 +24,7 @@ namespace KoeLib.Patterns.Railway.Results
     /// <typeparam name="TError">The type of the Error.</typeparam>
     /// <seealso cref="KoeLib.Patterns.Railway.Results.IResult" />
     [DebuggerStepThrough]
+   // [StructLayout(LayoutKind.Sequential)]
     public readonly struct ResultOrError<TError> : IResult
     {
         private readonly bool _isSuccess;

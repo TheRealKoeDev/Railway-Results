@@ -1,6 +1,7 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace KoeLib.Patterns.Railway.Results
 {
@@ -11,6 +12,7 @@ namespace KoeLib.Patterns.Railway.Results
     /// <typeparam name="TValue">The type of the value.</typeparam>
     /// <seealso cref="KoeLib.Patterns.Railway.Results.IResult" />
     [DebuggerStepThrough]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct Result<TValue> : IResult
     {
         private readonly bool _isSuccess;
