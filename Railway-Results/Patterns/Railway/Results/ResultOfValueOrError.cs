@@ -1,6 +1,7 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -8,12 +9,33 @@ using System.Text;
 namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
-    /// <para>Is a Monad with Value and Error.</para>
-    /// The DefaultValue of this struct is a failed Result with the defaultvalue of <typeparamref name="TError"/>.
+    /// 
+    /// </summary>
+    [DebuggerStepThrough]
+    public static class ResultOfValueOrErrorExtension
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TValueError"></typeparam>
+        /// <typeparam name="TNewValueError"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>       
+        public static Result<TNewValueError, TNewValueError> Allways<TValueError, TNewValueError>(this Result<TValueError, TValueError> target, Func<TValueError, TNewValueError> func)
+        {
+            Args.ExceptionIfNull(func, nameof(func));
+            return target.Either(func, func);
+        }
+    }
+
+    /// <summary>
+    /// A Result/Monad with Value and Error, that can either be a <see cref="Success(TValue)"/> or a <see cref="Error(TError)"/>.
+    /// <para>The default value of <see cref="Result{TValue, TError}"/> is a <see cref="Error(TError)"/> with the default value for <typeparamref name="TError"/>.</para>
     /// </summary>
     /// <typeparam name="TValue">The type of the Value.</typeparam>
     /// <typeparam name="TError">The type of the Error.</typeparam>
-    /// <seealso cref="KoeLib.Patterns.Railway.Results.IResult" />
+    /// <seealso cref="IResult" />   
     [DebuggerStepThrough]
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct Result<TValue, TError> : IResult
@@ -92,7 +114,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? _value : onError(_error);
-        }
+        }        
 
         public Result<TValue, TError> Ensure(Func<TValue, bool> condition, Func<TError> error)
         {
@@ -108,6 +130,12 @@ namespace KoeLib.Patterns.Railway.Results
             return this;
         }
 
+        public Result<TValue, TError> KeepOnSuccess(out TValue keptOnSuccess)
+        {
+            keptOnSuccess = _isSuccess ? _value : default;
+            return this;
+        }
+
         public Result<TValue, TError> KeepOnSuccess<T>(Func<TValue, T> onSuccess, out T kept)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
@@ -115,10 +143,23 @@ namespace KoeLib.Patterns.Railway.Results
             return this;
         }
 
+        public Result<TValue, TError> KeepOnError(out TError kept)
+        {
+            kept = _isSuccess ? default : _error;
+            return this;
+        }
+
         public Result<TValue, TError> KeepOnError<T>(Func<TError, T> onError, out T kept)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
             kept = _isSuccess ? default : onError(_error);
+            return this;
+        }
+
+        public Result<TValue, TError> KeepEither(out TValue keptOnSuccess, out TError keptOnError)
+        {
+            keptOnSuccess = _isSuccess ? _value : default;
+            keptOnError = _isSuccess ? default : _error;
             return this;
         }
 

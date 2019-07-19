@@ -7,9 +7,19 @@ using System.Text;
 
 namespace KoeLib.Patterns.Railway.Results
 {
+    /// <summary>
+    /// For the creation of a <see cref="ResultOrError{TError}"/> with <see cref="Create{TError}(bool, Func{TError})"/> without specifying generics.
+    /// </summary>
     [DebuggerStepThrough]
     public static class ResultOrError
     {
+        /// <summary>
+        /// Creates a instance of <see cref="ResultOrError{TError}"/>.
+        /// </summary>
+        /// <typeparam name="TError"></typeparam>
+        /// <param name="success"></param>
+        /// <param name="errorFunc"></param>
+        /// <returns></returns>
         public static ResultOrError<TError> Create<TError>(bool success, Func<TError> errorFunc)
         {
             Args.ExceptionIfNull(errorFunc, nameof(errorFunc));
@@ -18,37 +28,64 @@ namespace KoeLib.Patterns.Railway.Results
     }
 
     /// <summary>
-    /// Is a Monad without Value but with Error.
-    /// The DefaultValue of this struct is a <see cref="Error(TError)"/> with the default value of <typeparamref name="TError"/>.
+    /// A Result/Monad with Error but without Value, that can either be a <see cref="Success"/> or a <see cref="Error(TError)"/>.
+    /// <para>The default value of <see cref="ResultOrError{TError}"/> is a <see cref="Error(TError)"/> with a default value for <typeparamref name="TError"/>.</para>
     /// </summary>
     /// <typeparam name="TError">The type of the Error.</typeparam>
-    /// <seealso cref="KoeLib.Patterns.Railway.Results.IResult" />
+    /// <seealso cref="IResult" />
     [DebuggerStepThrough]
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ResultOrError<TError> : IResult
     {
+        /// <summary>
+        /// Is True if this is a <see cref="Success"/> or False if this is a <see cref="Error(TError)"/>.
+        /// </summary>
         private readonly bool _isSuccess;
 
+        /// <summary>
+        /// The Error.
+        /// </summary>
         private readonly TError _error;
 
+        /// <summary>
+        /// Creates a <see cref="ResultOrError{TError}"/> with a default value for <typeparamref name="TError"/>.
+        /// </summary>
+        /// <param name="isSuccess"> Is True if this is a <see cref="Success"/> or False if this is a <see cref="Error(TError)"/>.</param>
         private ResultOrError(bool isSuccess)
         {
             _error = default;
             _isSuccess = isSuccess;
         }
 
+        /// <summary>
+        /// Creates a <see cref="Error(TError)"/> with the <paramref name="error"/> as error value.
+        /// </summary>
+        /// <param name="error">The Error.</param>
         private ResultOrError(TError error)
         {            
             _error = error;
             _isSuccess = false;
         }
 
+        /// <summary>
+        /// Creates a Success <see cref="ResultOrError{TError}"/>.
+        /// </summary>
+        /// <returns></returns>
         public static ResultOrError<TError> Success()
             => new ResultOrError<TError>(true);
 
+        /// <summary>
+        /// Creates a Error <see cref="ResultOrError{TError}"/> with the Error <paramref name="error"/>.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns></returns>
         public static ResultOrError<TError> Error(TError error)
             => new ResultOrError<TError>(error);
 
+        /// <summary>
+        /// implicitly converts a <typeparamref name="TError"/> to a <see cref="Error(TError)"/>.
+        /// </summary>
+        /// <param name="error">The Error.</param>
         public static implicit operator ResultOrError<TError>(TError error)
             => new ResultOrError<TError>(error);
 
@@ -79,7 +116,7 @@ namespace KoeLib.Patterns.Railway.Results
         public ResultOrError<TNewError> BindOnError<TNewError>(Func<TError, ResultOrError<TNewError>> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? new ResultOrError<TNewError>(true) : onError(_error);
+            return _isSuccess ? ResultOrError<TNewError>.Success() : onError(_error);
         }
 
         public Result BindOnError(Func<TError, Result> onError)
@@ -87,7 +124,7 @@ namespace KoeLib.Patterns.Railway.Results
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? Result.Success() : onError(_error);
         }
-
+        
         public ResultOrError<TError> OnSuccess(Action onSuccess)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
@@ -127,7 +164,7 @@ namespace KoeLib.Patterns.Railway.Results
         public ResultOrError<TNewError> OnError<TNewError>(Func<TError, TNewError> onError)
         {
             Args.ExceptionIfNull(onError, nameof(onError));
-            return _isSuccess ? new ResultOrError<TNewError>(true) : onError(_error);
+            return _isSuccess ? ResultOrError<TNewError>.Success() : onError(_error);
         }
 
         public ResultOrError<TError> Either(Action onSuccess, Action<TError> onError)
@@ -161,7 +198,7 @@ namespace KoeLib.Patterns.Railway.Results
             if (_isSuccess)
             {
                 onSuccess();
-                return new ResultOrError<TNewError>(true);
+                return ResultOrError<TNewError>.Success();
             }
             return onError(_error);
         }
@@ -196,6 +233,12 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             kept = _isSuccess ? onSuccess() : default;
+            return this;
+        }
+
+        public ResultOrError<TError> KeepOnError(out TError keptError)
+        {
+            keptError = _isSuccess ? default : _error;
             return this;
         }
 

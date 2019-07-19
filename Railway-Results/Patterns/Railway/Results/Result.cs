@@ -7,6 +7,7 @@ namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
     /// A plain Result/Monad without Value or Error, that can either be a <see cref="Success"/> or a <see cref="Error"/>.
+    /// <para>The default value of <see cref="Result"/> is a <see cref="Error"/>.</para>
     /// </summary>
     /// <seealso cref="IResult" />
     [DebuggerStepThrough]
@@ -31,7 +32,8 @@ namespace KoeLib.Patterns.Railway.Results
         /// Creates a instance of <see cref="Result"/>.
         /// </summary>
         /// <param name="success">True for a <see cref="Success"/> or False for a <see cref="Error"/>.</param>
-        public static Result Create(bool success) => new Result(success);
+        public static Result Create(bool success) 
+            => new Result(success);
 
         /// <summary>
         /// Creates a instance of <see cref="Result{TValue}"/>.
@@ -383,7 +385,7 @@ namespace KoeLib.Patterns.Railway.Results
         /// <summary>
         /// Case <see cref="Success"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// <para></para>
-        /// Case <see cref="Error"/>: Stores the default-value of <typeparamref name="T"/> in <paramref name="kept"/>.
+        /// Case <see cref="Error"/>: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
         /// </summary>
         /// <typeparam name="T">The type of the kept variable.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="T"/> is stored in <paramref name="kept"/> if This is a <see cref="Success"/>.</param>
@@ -398,7 +400,7 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success"/>: Stores the default-value of <typeparamref name="T"/> in <paramref name="kept"/>.
+        /// Case <see cref="Success"/>: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
         /// <para></para>
         /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// </summary>
@@ -433,9 +435,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/> for later use. Stores the default-value of <typeparamref name="T2"/> in <paramref name="keptOnError"/>. 
+        /// Case <see cref="Success"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/> for later use. Stores the default value of <typeparamref name="T2"/> in <paramref name="keptOnError"/>. 
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T2"/> in <paramref name="keptOnError"/> for later use. Stores the default-value of <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/>.
+        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T2"/> in <paramref name="keptOnError"/> for later use. Stores the default value of <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/>.
         /// </summary>
         /// <typeparam name="T1">The type of the kept variable in case of <see cref="Success"/>.</typeparam>
         /// <typeparam name="T2">The type of the kept variable in case of <see cref="Error"/>.</typeparam>

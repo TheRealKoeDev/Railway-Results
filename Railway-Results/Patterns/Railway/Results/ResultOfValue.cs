@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
-    /// Is a Monad with Value.
-    /// The DefaultValue of this struct has no Value and represents a failed Result.
+    /// A Result/Monad with Value but without Error, that can either be a <see cref="Success(TValue)"/> or a <see cref="Error"/>.
+    /// <para>The default value of <see cref="Result{TValue}"/> is a <see cref="Error"/>.</para>
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    /// <seealso cref="KoeLib.Patterns.Railway.Results.IResult" />
+    /// <seealso cref="IResult" />
     [DebuggerStepThrough]
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct Result<TValue> : IResult
@@ -73,6 +73,12 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(condition, nameof(condition));
             return _isSuccess && condition(_value) ? this : new Result<TValue>();
+        }
+
+        public Result<TValue> KeepOnSuccess(out TValue keptOnSuccess)
+        {
+            keptOnSuccess = _isSuccess ? _value : default;
+            return this;
         }
 
         public Result<TValue> KeepOnSuccess<T>(Func<TValue, T> onSuccess, out T kept)
