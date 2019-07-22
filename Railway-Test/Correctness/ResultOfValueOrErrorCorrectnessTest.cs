@@ -26,7 +26,9 @@ namespace Railway.Test.Correctness
     {
         [TestMethod]
         public void TestMethod1()
-        {
+        { 
+            Result<int, int> result = Result<int, int>.Success(10);
+            result.Allways()
             Test t = new Test();
             t.Te(lol2: _ => 0);
             int resultSize = System.Runtime.InteropServices.Marshal.SizeOf(default(Result));

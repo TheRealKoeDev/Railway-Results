@@ -16,7 +16,7 @@ namespace KoeLib.Patterns.Railway.Results
     public readonly struct Result<TValue> : IResult
     {
         /// <summary>
-        /// Is True this is a <see cref="Success"/> or False if this is a <see cref="Error"/>.
+        /// Is True this is a <see cref="Success(TValue)"/> or False if this is a <see cref="Error"/>.
         /// </summary>
         private readonly bool _isSuccess;
 
@@ -53,7 +53,7 @@ namespace KoeLib.Patterns.Railway.Results
         /// <summary>
         /// Implicitly converts a <typeparamref name="TValue"/> to a <see cref="Success(TValue)"/>.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The Value.</param>
         public static implicit operator Result<TValue>(TValue value)
             => new Result<TValue>(value);
 
@@ -65,15 +65,15 @@ namespace KoeLib.Patterns.Railway.Results
             => result._isSuccess;
 
         /// <summary>
-        /// Converts a <see cref="Result{TValue}"/> to a <see cref="Result"/>.
+        /// Converts This <see cref="Result{TValue}"/> to a <see cref="Result"/>.
         /// </summary>
         /// <returns></returns>
         public Result AsPlainResult() => this;
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns the <see cref="Result"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns the <see cref="Result"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Result.Error"/>
+        /// Error: Returns a <see cref="Result.Error"/>
         /// </summary>
         /// <param name="onSuccess">Is called and the <see cref="Result"/> is returned it This is a <see cref="Success(TValue)"/>.</param>
         /// <returns></returns>
@@ -85,9 +85,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns the <see cref="Result{TValue}"/> of <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns the <see cref="Result{TValue}"/> of <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
+        /// Error: Returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
         /// </summary>
         /// <typeparam name="TNewValue">The new Type of Value.</typeparam>
         /// <param name="onSuccess">Is called and the <see cref="Result{TValue}"/> of <typeparamref name="TNewValue"/> is returned if This is a <see cref="Success(TValue)"/>.</param>
@@ -100,9 +100,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns the <typeparamref name="TResult"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns the <typeparamref name="TResult"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns the <typeparamref name="TResult"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns the <typeparamref name="TResult"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TResult">The type of <see cref="IResult"/> that <paramref name="onSuccess"/> and <paramref name="onError"/> are returning.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="TResult"/> is returned if This is a <see cref="Success(TValue)"/>.</param>
@@ -117,9 +117,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Returns a <see cref="Success(TValue)"/>.
+        /// Success: Returns a <see cref="Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns the <see cref="Result{TValue}"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns the <see cref="Result{TValue}"/> from <paramref name="onError"/>.
         /// </summary>
         /// <param name="onError">Is called and the <see cref="Result{TValue}"/> is returned if This is a <see cref="Error"/>.</param>
         /// <returns></returns>
@@ -131,9 +131,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Returns a <see cref="Result{TValue, TError}.Success(TValue)"/>.
+        /// Success: Returns a <see cref="Result{TValue, TError}.Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns the <see cref="Result{TValue, TError}.Error(TError)"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns the <see cref="Result{TValue, TError}.Error(TError)"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TError">The type of Error.</typeparam>
         /// <param name="onError">Is called and the <see cref="Result{TValue, TError}"/> is returned if This is a <see cref="Error"/>.</param>
@@ -146,9 +146,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="condition"/> and returns a <see cref="Success(TValue)"/> if the <paramref name="condition"/> is true or a <see cref="Error"/> if the <paramref name="condition"/> is false.
+        /// Success: Calls <paramref name="condition"/> and returns a <see cref="Success(TValue)"/> if the <paramref name="condition"/> is true or a <see cref="Error"/> if the <paramref name="condition"/> is false.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Error"/>.
+        /// Error: Returns a <see cref="Error"/>.
         /// </summary>
         /// <param name="condition">Is called if This is a <see cref="Success(TValue)"/> and turned into a <see cref="Result{TValue}.Error"/> if the <paramref name="condition"/> is false.</param>
         /// <returns></returns>
@@ -160,9 +160,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Stores the <typeparamref name="TValue"/> in <paramref name="keptOnSuccess"/>.
+        /// Success: Stores the <typeparamref name="TValue"/> in <paramref name="keptOnSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Stores the default value of <typeparamref name="TValue"/> in <paramref name="keptOnSuccess"/>.
+        /// Error: Stores the default value of <typeparamref name="TValue"/> in <paramref name="keptOnSuccess"/>.
         /// </summary>
         /// <param name="keptOnSuccess">Stores the <typeparamref name="TValue"/> of This if This is a <see cref="Success(TValue)"/>..</param>
         /// <returns></returns>
@@ -174,9 +174,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
+        /// Success: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// <para></para>
-        /// Case <see cref="Error"/>: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
+        /// Error: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
         /// </summary>
         /// <typeparam name="T">The type of the kept variable.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="T"/> is stored in <paramref name="kept"/> if This is a <see cref="Success(TValue)"/>.</param>
@@ -191,9 +191,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
+        /// Success: Stores the default value of <typeparamref name="T"/> in <paramref name="kept"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
+        /// Error: Calls <paramref name="onError"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// </summary>
         /// <typeparam name="T">The type of the kept variable.</typeparam>
         /// <param name="onError">Is called and the <typeparamref name="T"/> is stored in <paramref name="kept"/> if this is a <see cref="Error"/>.</param>
@@ -208,9 +208,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
+        /// Success: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
+        /// Error: Calls <paramref name="onError"/> and stores the <typeparamref name="T"/> in <paramref name="kept"/> for later use.
         /// </summary>
         /// <typeparam name="T">The type of the kept variable.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="T"/> is stored in <paramref name="kept"/> if this is a <see cref="Success(TValue)"/>.</param>
@@ -226,9 +226,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/> for later use. Stores the default value of <typeparamref name="T2"/> in <paramref name="keptOnError"/>. 
+        /// Success: Calls <paramref name="onSuccess"/> and stores the <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/> for later use. Stores the default value of <typeparamref name="T2"/> in <paramref name="keptOnError"/>. 
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and stores the <typeparamref name="T2"/> in <paramref name="keptOnError"/> for later use. Stores the default value of <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/>.
+        /// Error: Calls <paramref name="onError"/> and stores the <typeparamref name="T2"/> in <paramref name="keptOnError"/> for later use. Stores the default value of <typeparamref name="T1"/> in <paramref name="keptOnSuccess"/>.
         /// </summary>
         /// <typeparam name="T1">The type of the kept variable in case of <see cref="Success"/>.</typeparam>
         /// <typeparam name="T2">The type of the kept variable in case of <see cref="Error"/>.</typeparam>
@@ -247,9 +247,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Success(TValue)"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Error"/>.
+        /// Error: Returns a <see cref="Error"/>.
         /// </summary>
         /// <param name="onSuccess">Is called if This is a <see cref="Success(TValue)"/>.</param>
         /// <returns></returns>
@@ -265,9 +265,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue}.Success(TValue)"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue}.Success(TValue)"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
+        /// Error: Returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
         /// </summary>
         /// <typeparam name="TNewValue">The new type of Value.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="TNewValue"/> is returned as <see cref="Result{TValue}.Success(TValue)"/> if This is a <see cref="Success(TValue)"/>.</param>
@@ -280,9 +280,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Returns a <see cref="Success(TValue)"/>.
+        /// Success: Returns a <see cref="Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Success(TValue)"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Success(TValue)"/>.
         /// </summary>
         /// <param name="onError">Is called if This is a <see cref="Error"/> and is supposed to fix the <see cref="Error"/>.</param>
         /// <returns></returns>
@@ -294,9 +294,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Returns a <see cref="Success(TValue)"/>.
+        /// Success: Returns a <see cref="Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Error"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Error"/>.
         /// </summary>
         /// <param name="onError">Is called if This is a <see cref="Error"/>.</param>
         /// <returns></returns>
@@ -312,9 +312,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Returns a <see cref="Result{TValue, TError}.Success(TValue)"/>.
+        /// Success: Returns a <see cref="Result{TValue, TError}.Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TError">The type of the Error.</typeparam>
         /// <param name="onError">Is called and returned as <see cref="Result{TValue, TError}.Error(TError)"/> if This is a <see cref="Error"/>.</param>
@@ -327,9 +327,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Success(TValue)"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Success(TValue)"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Error"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Error"/>.
         /// </summary>
         /// <param name="onSuccess">Is called if This is a <see cref="Success(TValue)"/>.</param>
         /// <param name="onError">Is called if This is a <see cref="Success(TValue)"/>.</param>
@@ -350,9 +350,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue}.Success(TValue)"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>. 
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue}.Success(TValue)"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>. 
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue}.Error"/> of <typeparamref name="TNewValue"/>.
         /// </summary>
         /// <typeparam name="TNewValue">The new type of the Value.</typeparam>
         /// <param name="onSuccess">Is called and returned as <see cref="Result{TValue}.Success(TValue)"/> if This is a <see cref="Success"/>.</param>
@@ -371,9 +371,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue,TError}.Success"/> of <typeparamref name="TValue"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue,TError}.Success"/> of <typeparamref name="TValue"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue,TError}.Error(TError)"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue,TError}.Error(TError)"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TError">The type of the Error.</typeparam>
         /// <param name="onSuccess">Is called if This is a <see cref="Success(TValue)"/>.</param>
@@ -393,9 +393,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/> and <typeparamref name="TError"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/> and <typeparamref name="TError"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TValue"/> and <typeparamref name="TNewValue"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TValue"/> and <typeparamref name="TNewValue"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TNewValue">The new type of the Value.</typeparam>
         /// <typeparam name="TError">The type of the Error.</typeparam>
@@ -410,9 +410,9 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Case <see cref="Success(TValue)"/>: Calls <paramref name="onSuccess"/> and returns the <typeparamref name="T"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns the <typeparamref name="T"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns the <typeparamref name="T"/>.
+        /// Error: Calls <paramref name="onError"/> and returns the <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The return-type of the Method.</typeparam>
         /// <param name="onSuccess">Is called and the <typeparamref name="T"/> is returned if This is a <see cref="Success(TValue)"/>.</param>
