@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
-    /// A Result/Monad with Value but without Error, that can either be a <see cref="Success(TValue)"/> or a <see cref="Error"/>.
+    /// A Result/Monad with Value, that can either be a <see cref="Success(TValue)"/> or a <see cref="Error"/>.
     /// <para>The default value of <see cref="Result{TValue}"/> is a <see cref="Error"/>.</para>
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>

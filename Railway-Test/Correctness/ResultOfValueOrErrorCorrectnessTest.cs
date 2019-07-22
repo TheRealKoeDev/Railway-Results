@@ -6,7 +6,15 @@ namespace Railway.Test.Correctness
 {
     public class Test
     {
+        public void Te(Func<Test, int> lol)
+        {
+            lol(this);
+        }
 
+        public void Te(Func<Test2, int> lol2)
+        {
+            lol2(new Test2());
+        }
     }
 
     public class Test2 : Test
@@ -19,7 +27,8 @@ namespace Railway.Test.Correctness
         [TestMethod]
         public void TestMethod1()
         {
-            var ok = Result<Test, string>.Error("10").CastContent<string, int>();
+            Test t = new Test();
+            t.Te(lol2: _ => 0);
             int resultSize = System.Runtime.InteropServices.Marshal.SizeOf(default(Result));
             int resultOfValueSize = System.Runtime.InteropServices.Marshal.SizeOf(default(Result<double>));
             int resultOfErrorSize = System.Runtime.InteropServices.Marshal.SizeOf(default(ResultOrError<double>));

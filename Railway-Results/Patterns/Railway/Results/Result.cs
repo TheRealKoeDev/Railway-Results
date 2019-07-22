@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace KoeLib.Patterns.Railway.Results
 {
     /// <summary>
-    /// A plain Result/Monad without Value or Error, that can either be a <see cref="Success"/> or a <see cref="Error"/>.
+    /// A plain Result/Monad, that can either be a <see cref="Success"/> or a <see cref="Error"/>.
     /// <para>The default value of <see cref="Result"/> is a <see cref="Error"/>.</para>
     /// </summary>
     /// <seealso cref="IResult" />
@@ -217,7 +217,25 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess));
             return _isSuccess ? onSuccess() : Result<TValue>.Error();
-        }        
+        }
+
+        /// <summary>
+        /// Case <see cref="Success"/>: Returns a <see cref="Success"/>.
+        /// <para></para>
+        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Success"/>.
+        /// </summary>
+        /// <param name="onError">Is called if This is a <see cref="Error"/> and is supposed to fix the <see cref="Error"/>.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public Result FixOnError(Action onError)
+        {
+            Args.ExceptionIfNull(onError, nameof(onError));
+            if (!_isSuccess)
+            {
+                onError();
+            }
+            return Success();
+        }
 
         /// <summary>
         /// Case <see cref="Success"/>: Returns a <see cref="Success"/>.
@@ -250,25 +268,7 @@ namespace KoeLib.Patterns.Railway.Results
         {
             Args.ExceptionIfNull(onError, nameof(onError));
             return _isSuccess ? ResultOrError<TError>.Success() : onError();
-        }
-
-        /// <summary>
-        /// Case <see cref="Success"/>: Returns a <see cref="Success"/>.
-        /// <para></para>
-        /// Case <see cref="Error"/>: Calls <paramref name="onError"/> and returns a <see cref="Success"/>.
-        /// </summary>
-        /// <param name="onError">Is called if This is a <see cref="Error"/> and is supposed to fix the <see cref="Error"/>.</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public Result FixOnError(Action onError)
-        {
-            Args.ExceptionIfNull(onError, nameof(onError));
-            if (!_isSuccess)
-            {
-                onError();
-            }
-            return Success();
-        }
+        }        
 
         /// <summary>
         /// Case <see cref="Success"/>: Calls <paramref name="onSuccess"/> and returns a <see cref="Success"/>.
