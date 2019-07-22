@@ -105,7 +105,7 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Implicitly converts a <see cref="bool"/> to a <see cref="Result"/> by calling <see cref="Result(bool)"/>.
+        /// Implicitly converts a <see cref="bool"/> to a <see cref="Result"/>.
         /// </summary>
         /// <param name="success"></param>
         public static implicit operator Result(bool success)
@@ -128,10 +128,10 @@ namespace KoeLib.Patterns.Railway.Results
         /// <summary>
         /// Case <see cref="Success"/>: Calls <paramref name="onSuccess"/> and returns the <see cref="Result{TValue}"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Case <see cref="Error"/>: Returns a <see cref="Result{TValue}.Error"/>
+        /// Case <see cref="Error"/>: Returns a <see cref="Result{TValue}.Error"/>.
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="onSuccess">Is called and the <see cref="Result{TValue}"/> is returned it This is a <see cref="Success"/>.</param>
+        /// <typeparam name="TValue">The Value of the new <see cref="Result{TValue}"/>.</typeparam>
+        /// <param name="onSuccess">Is called and the <see cref="Result{TValue}"/> is returned if This is a <see cref="Success"/>.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public Result<TValue> Bind<TValue>(Func<Result<TValue>> onSuccess)
