@@ -13,15 +13,15 @@
     <RepositoryUrl>https://github.com/TheRealKoeDev/Railway-Results</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Company>-</Company>
-    <Authors>Sebastian Körner(KoeDev)</Authors>
+    <Authors>Sebastian Körner (KoeDev)</Authors>
     <PackageIconUrl></PackageIconUrl>
     <Copyright>MIT</Copyright>
     <Description>Monads for easy and compact error handling with Railway Oriented Programming.
 </Description>
     <PackageTags>result railway oriented programming rop functional monad csharp C#</PackageTags>
     <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.4.1</AssemblyVersion>
-    <FileVersion>1.0.4.1</FileVersion>
+    <AssemblyVersion>1.1.0.1</AssemblyVersion>
+    <FileVersion>1.1.0.1</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
