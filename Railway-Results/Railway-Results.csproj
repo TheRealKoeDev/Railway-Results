@@ -19,7 +19,7 @@
     <Description>Monads for easy and compact error handling with Railway Oriented Programming.
 </Description>
     <PackageTags>result railway oriented programming rop functional monad csharp C#</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.1.0</Version>
     <AssemblyVersion>1.1.0.1</AssemblyVersion>
     <FileVersion>1.1.0.1</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
