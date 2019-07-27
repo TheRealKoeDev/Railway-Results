@@ -1,6 +1,8 @@
 ﻿using KoeLib.Patterns.Railway.Tools;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace KoeLib.Patterns.Railway.Results
 {
@@ -11,15 +13,8 @@ namespace KoeLib.Patterns.Railway.Results
     [DebuggerStepThrough]
     public readonly struct TryCatchResult<TResult>
     {
-        /// <summary>
-        /// The function that is called and try catched.
-        /// </summary>
         private readonly Func<TResult> _resultFunc;
 
-        /// <summary>
-        /// Creates an instance of <see cref="TryCatchResult{T}"/>.
-        /// </summary>
-        /// <param name="resultFunc">The function that is called and try catched.</param>
         internal TryCatchResult(Func<TResult> resultFunc)
         {
             Args.ExceptionIfNull(resultFunc, nameof(resultFunc));
@@ -43,5 +38,5 @@ namespace KoeLib.Patterns.Railway.Results
                 return onException(e);
             }
         }
-    }
+    }    
 }

@@ -27,7 +27,7 @@ namespace KoeLib.Patterns.Railway.Results
         }
     }
 
-    /// <summary>
+      /// <summary>
     /// A Result/Monad with Error, that can either be a <see cref="Success"/> or a <see cref="Error(TError)"/>.
     /// <para>The default value of <see cref="ResultOrError{TError}"/> is a <see cref="Error(TError)"/> with a default value for <typeparamref name="TError"/>.</para>
     /// </summary>
@@ -37,30 +37,16 @@ namespace KoeLib.Patterns.Railway.Results
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct ResultOrError<TError> : IResult
     {
-        /// <summary>
-        /// Is True if this is a <see cref="Success"/> or False if this is a <see cref="Error(TError)"/>.
-        /// </summary>
         private readonly bool _isSuccess;
 
-        /// <summary>
-        /// The Error.
-        /// </summary>
         private readonly TError _error;
 
-        /// <summary>
-        /// Creates a <see cref="ResultOrError{TError}"/> with a default value for <typeparamref name="TError"/>.
-        /// </summary>
-        /// <param name="isSuccess"> Is True if this is a <see cref="Success"/> or False if this is a <see cref="Error(TError)"/>.</param>
         private ResultOrError(bool isSuccess)
         {
             _error = default;
             _isSuccess = isSuccess;
         }
 
-        /// <summary>
-        /// Creates a <see cref="Error(TError)"/> with the <paramref name="error"/> as error value.
-        /// </summary>
-        /// <param name="error">The Error.</param>
         private ResultOrError(TError error)
         {            
             _error = error;
@@ -94,7 +80,7 @@ namespace KoeLib.Patterns.Railway.Results
         /// </summary>
         /// <param name="result"></param>
         public static implicit operator Result(ResultOrError<TError> result)
-            => result._isSuccess;
+            => result._isSuccess;       
 
         /// <summary>
         /// Converts this <see cref="ResultOrError{TError}"/> to a <see cref="Result"/>.

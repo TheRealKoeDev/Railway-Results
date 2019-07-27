@@ -64,6 +64,8 @@ namespace KoeLib.Patterns.Railway.Results
         public static implicit operator Result(Result<TValue> result)
             => result._isSuccess;
 
+        public static Result<TValue> operator &(Result result1, Result<TValue> result2) => result1.Bind(() => result2);
+
         /// <summary>
         /// Converts This <see cref="Result{TValue}"/> to a <see cref="Result"/>.
         /// </summary>
@@ -380,7 +382,6 @@ namespace KoeLib.Patterns.Railway.Results
         /// <param name="onError">Is called and returned as <see cref="Result{TValue,TError}.Error(TError)"/> if This is a <see cref="Error"/>.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-
         public Result<TValue, TError> Either<TError>(Action<TValue> onSuccess, Func<TError> onError)
         {
             Args.ExceptionIfNull(onSuccess, nameof(onSuccess), onError, nameof(onError));
@@ -393,14 +394,14 @@ namespace KoeLib.Patterns.Railway.Results
         }
 
         /// <summary>
-        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/> and <typeparamref name="TError"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
+        /// Success: Calls <paramref name="onSuccess"/> and returns a <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/>/<typeparamref name="TError"/> with the <typeparamref name="TNewValue"/> from <paramref name="onSuccess"/>.
         /// <para></para>
-        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TValue"/> and <typeparamref name="TNewValue"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
+        /// Error: Calls <paramref name="onError"/> and returns a <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TValue"/>/<typeparamref name="TNewValue"/> with the <typeparamref name="TError"/> from <paramref name="onError"/>.
         /// </summary>
         /// <typeparam name="TNewValue">The new type of the Value.</typeparam>
         /// <typeparam name="TError">The type of the Error.</typeparam>
-        /// <param name="onSuccess">Is called and returned as <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/> and <typeparamref name="TError"/> if This is a <see cref="Success"/>.</param>
-        /// <param name="onError">Is called and returned as <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TNewValue"/> and <typeparamref name="TError"/> if This is a <see cref="Error"/>.</param>
+        /// <param name="onSuccess">Is called and returned as <see cref="Result{TValue, TError}.Success(TValue)"/> of <typeparamref name="TNewValue"/>/<typeparamref name="TError"/> if This is a <see cref="Success"/>.</param>
+        /// <param name="onError">Is called and returned as <see cref="Result{TValue, TError}.Error(TError)"/> of <typeparamref name="TNewValue"/>/<typeparamref name="TError"/> if This is a <see cref="Error"/>.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public Result<TNewValue, TError> Either<TNewValue, TError>(Func<TValue, TNewValue> onSuccess, Func<TError> onError)

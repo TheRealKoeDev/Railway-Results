@@ -14,15 +14,8 @@ namespace KoeLib.Patterns.Railway.Results
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct Result : IResult
     {
-        /// <summary>
-        /// Is True this is a <see cref="Success"/> or False if this is a <see cref="Error"/>.
-        /// </summary>
         private readonly bool _isSuccess;
 
-        /// <summary>
-        /// Creates a instance of <see cref="Result"/>.
-        /// </summary>
-        /// <param name="success">True for a <see cref="Success"/> or False for a <see cref="Error"/>.</param>
         private Result(bool success)
         {            
             _isSuccess = success;            
@@ -68,15 +61,13 @@ namespace KoeLib.Patterns.Railway.Results
         /// Creates a Success <see cref="Result"/>.
         /// </summary>
         /// <returns></returns>
-        public static Result Success()
-            => new Result(true);
+        public static Result Success() => new Result(true);
 
         /// <summary>
         /// Creates a Error <see cref="Result"/>.
         /// </summary>
         /// <returns></returns>
-        public static Result Error()
-            => new Result(false);
+        public static Result Error() => new Result(false);
 
         /// <summary>
         /// Returns a <see cref="TryCatchResult{T}"/> that executes the <paramref name="resultFunc"/> in a try-catch statement.
@@ -108,8 +99,7 @@ namespace KoeLib.Patterns.Railway.Results
         /// Implicitly converts a <see cref="bool"/> to a <see cref="Result"/>.
         /// </summary>
         /// <param name="success"></param>
-        public static implicit operator Result(bool success)
-            => new Result(success);
+        public static implicit operator Result(bool success) => new Result(success);
 
         /// <summary>
         /// Success: Calls <paramref name="onSuccess"/> and returns the <see cref="Result"/> from <paramref name="onSuccess"/>.
