@@ -2,6 +2,9 @@
 
 Provides Monads for error handling inspired by Railway-Oriented-Programming.
 
+This Library allows you to handle functions that might fail or produce Errors easily by providing two paths for return values
+and allows you to place error creation inside of functions without the use of Exceptions or boxing of functions.
+
 NameSpace: KoeLib.Patterns.Railway
 
 * Monads/Results: KoeLib.Patterns.Railway.Results
