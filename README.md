@@ -12,6 +12,11 @@ NameSpace: KoeLib.Patterns.Railway
 * Task Extensions for Monads: KoeLib.Patterns.Railway.Tasks
 * IEnumerable Extensions for Monads: KoeLib.Patterns.Railway.Linq
 
+#### NuGet
+````
+Install-Package Railway-Results
+````
+
 ## Monads
 * [Result](https://github.com/TheRealKoeDev/Railway-Results/wiki/Result)
 * [ResultᐸValueᐳ](https://github.com/TheRealKoeDev/Railway-Results/wiki/ResultᐸValueᐳ)
