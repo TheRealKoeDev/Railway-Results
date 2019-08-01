@@ -6,7 +6,7 @@ This Library allows you to handle functions that might fail or produce Errors ea
 and allows you to place error creation inside of functions without the use of Exceptions.
 Errors are passed on automatically and can be handled later without the need to box functions.
 
-NameSpace: KoeLib.Patterns.Railway
+#### NameSpace: KoeLib.Patterns.Railway
 
 * Monads/Results: KoeLib.Patterns.Railway.Results
 * Task Extensions for Monads: KoeLib.Patterns.Railway.Tasks
